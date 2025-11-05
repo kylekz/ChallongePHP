@@ -1,0 +1,23 @@
+{
+  "data": {
+    "type": "communities",
+    "id": "80601",
+    "attributes": {
+      "id": 80601,
+      "name": "Esports Champions",
+      "url": "esports_champions",
+      "identifier": "esports_champions",
+      "description": "Premier esports community",
+      "description_source": "markdown",
+      "private": false,
+      "hide_global_chat": false,
+      "member_count": 250,
+      "tournaments_count": 42,
+      "banner_url": "https://images.challonge.com/esports_banner.png",
+      "icon_url": "https://images.challonge.com/esports_icon.png",
+      "created_at": "2023-06-01T00:00:00.000Z",
+      "updated_at": "2024-01-15T00:00:00.000Z",
+      "full_challonge_url": "https://challonge.com/communities/esports_champions"
+    }
+  }
+}

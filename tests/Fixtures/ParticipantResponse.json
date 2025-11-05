@@ -1,0 +1,41 @@
+{
+  "data": {
+    "type": "participants",
+    "id": "12345",
+    "attributes": {
+      "id": 12345,
+      "tournament_id": 30201,
+      "name": "Player 1",
+      "display_name": "Player 1",
+      "seed": 1,
+      "active": true,
+      "on_waiting_list": false,
+      "checked_in": false,
+      "check_in_open": true,
+      "can_check_in": true,
+      "checked_in_at": null,
+      "final_rank": null,
+      "group_id": null,
+      "group_player_ids": [],
+      "has_irrelevant_seed": false,
+      "icon": null,
+      "integration_uids": null,
+      "invitation_id": null,
+      "invite_email": null,
+      "misc": "Some notes",
+      "challonge_username": null,
+      "challonge_email_address_verified": null,
+      "removable": true,
+      "participatable_or_invitation_attached": false,
+      "confirm_remove": false,
+      "invitation_pending": false,
+      "display_name_with_invitation_email_address": "Player 1",
+      "email_hash": null,
+      "username": null,
+      "attached_participatable_portrait_url": null,
+      "reactivatable": false,
+      "created_at": "2024-01-15T11:00:00.000Z",
+      "updated_at": "2024-01-15T11:00:00.000Z"
+    }
+  }
+}

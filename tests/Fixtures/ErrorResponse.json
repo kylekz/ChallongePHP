@@ -1,0 +1,18 @@
+{
+  "errors": [
+    {
+      "status": 422,
+      "detail": "Tournament type is invalid",
+      "source": {
+        "pointer": "/data/attributes/tournament_type"
+      }
+    },
+    {
+      "status": 422,
+      "detail": "Name can't be blank",
+      "source": {
+        "pointer": "/data/attributes/name"
+      }
+    }
+  ]
+}

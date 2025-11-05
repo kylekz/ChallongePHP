@@ -1,0 +1,20 @@
+{
+  "data": {
+    "type": "attachments",
+    "id": "332211",
+    "attributes": {
+      "id": 332211,
+      "match_id": 98765,
+      "user_id": 54321,
+      "description": "Screenshot from final match",
+      "url": "https://example.com/screenshot.png",
+      "original_file_name": "screenshot.png",
+      "asset_file_name": "attachment_332211.png",
+      "asset_content_type": "image/png",
+      "asset_file_size": 245678,
+      "asset_url": "https://challonge.com/assets/attachment_332211.png",
+      "created_at": "2024-01-15T13:23:03.000Z",
+      "updated_at": "2024-01-15T13:23:03.000Z"
+    }
+  }
+}

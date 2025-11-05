@@ -23,9 +23,13 @@ trait DtoClientTrait
      */
     public static function fromResponse(ClientWrapper $client, array $data): self
     {
+        // Extract attributes from JSON API format if present
+        // API v2.1 returns: {type: "...", id: "...", attributes: {...}}
+        $mappingData = $data['attributes'] ?? $data;
+
         $mapper = self::getMapper();
         /** @var static $dto */
-        $dto = $mapper->map(static::class, $data);
+        $dto = $mapper->map(static::class, $mappingData);
         $dto->setClient($client);
 
         return $dto;

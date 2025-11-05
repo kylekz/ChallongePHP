@@ -1,0 +1,32 @@
+{
+  "data": {
+    "type": "races",
+    "id": "50301",
+    "attributes": {
+      "id": 50301,
+      "name": "Speed Run Championship",
+      "url": "speedrun_championship",
+      "state": "pending",
+      "description": "Racing tournament with time trials",
+      "race_type": "time_trial",
+      "target_round_count": 3,
+      "current_round": 0,
+      "participants_count": 16,
+      "signup_cap": 32,
+      "private": false,
+      "notify_users_when_matches_open": true,
+      "notify_users_when_the_tournament_ends": true,
+      "created_at": "2024-01-15T09:00:00.000Z",
+      "updated_at": "2024-01-15T09:00:00.000Z",
+      "start_at": "2024-01-20T10:00:00.000Z",
+      "started_at": null,
+      "completed_at": null,
+      "full_challonge_url": "https://challonge.com/speedrun_championship",
+      "live_image_url": "https://images.challonge.com/speedrun.png",
+      "sign_up_url": null,
+      "created_by_api": true,
+      "game_id": 123,
+      "game_name": "Super Speed Runner"
+    }
+  }
+}
