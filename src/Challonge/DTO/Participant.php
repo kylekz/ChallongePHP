@@ -17,14 +17,18 @@ class Participant
     use DtoClientTrait;
 
     public function __construct(
+        // REQUIRED PARAMETERS (no defaults) - must come first
         // Core identifiers - always present
         public readonly int $id,
         public readonly int $tournament_id,
-
-        // Required fields
         public readonly string $name,
         public readonly string $display_name,
+        
+        // Timestamps - always present  
+        public readonly string $created_at,
+        public readonly string $updated_at,
 
+        // OPTIONAL PARAMETERS WITH DEFAULTS
         // Seeding - has default
         public readonly int $seed = 1,
 
@@ -41,16 +45,13 @@ class Participant
         public readonly bool $checked_in = false,
         public readonly bool $has_irrelevant_seed = false,
 
-        // Timestamps - always present
-        public readonly string $created_at,
-        public readonly string $updated_at,
-
         // Arrays - have defaults
         public readonly array $group_player_ids = [],
 
         // Optional display
         public readonly string $display_name_with_invitation_email_address = '',
 
+        // NULLABLE OPTIONAL PARAMETERS
         // Optional strings
         public readonly ?string $username = null,
         public readonly ?string $challonge_username = null,

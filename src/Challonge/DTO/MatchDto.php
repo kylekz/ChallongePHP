@@ -16,21 +16,21 @@ class MatchDto
     use DtoClientTrait;
 
     public function __construct(
+        // REQUIRED PARAMETERS (no defaults) - must come first
         // Core identifiers - always present
         public readonly int $id,
         public readonly int $tournament_id,
         public readonly string $identifier,
-
-        // State - always present
         public readonly string $state,
-
-        // Round/ordering - have defaults
-        public readonly int $round = 1,
-        public readonly int $suggested_play_order = 1,
-
+        
         // Timestamps - always present
         public readonly string $created_at,
         public readonly string $updated_at,
+
+        // OPTIONAL PARAMETERS WITH DEFAULTS
+        // Round/ordering - have defaults
+        public readonly int $round = 1,
+        public readonly int $suggested_play_order = 1,
 
         // Boolean flags - have defaults
         public readonly bool $optional = false,
@@ -38,15 +38,16 @@ class MatchDto
         public readonly bool $player2_is_prereq_match_loser = false,
         public readonly bool $has_attachment = false,
 
+        // Scores - empty string default
+        public readonly string $scores_csv = '',
+        public readonly string $prerequisite_match_ids_csv = '',
+
+        // NULLABLE OPTIONAL PARAMETERS
         // Optional boolean (can be null)
         public readonly ?bool $forfeited = null,
 
         // Optional counts (can be null)
         public readonly ?int $attachment_count = null,
-
-        // Scores - empty string default
-        public readonly string $scores_csv = '',
-        public readonly string $prerequisite_match_ids_csv = '',
 
         // Optional player IDs (can be null before seeding)
         public readonly ?int $player1_id = null,
