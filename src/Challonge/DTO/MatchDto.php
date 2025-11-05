@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Reflex\Challonge\DTO;
 
 use Reflex\Challonge\DtoClientTrait;
+use Reflex\Challonge\Enums\MatchState;
 
 /**
  * Match DTO
@@ -21,7 +22,7 @@ class MatchDto
         public readonly int $id,
         public readonly int $tournament_id,
         public readonly string $identifier,
-        public readonly string $state,
+        public readonly MatchState $state,
         
         // Timestamps - always present
         public readonly string $created_at,

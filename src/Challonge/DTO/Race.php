@@ -6,54 +6,47 @@ namespace Reflex\Challonge\DTO;
 
 use Illuminate\Support\Collection;
 use Reflex\Challonge\DtoClientTrait;
+use Reflex\Challonge\Enums\RaceState;
+use Reflex\Challonge\Enums\RaceType;
 
 /**
  * Race DTO
  *
  * Represents a racing-style tournament where timing matters.
+ * Properties are typed based on Challonge API v2.1 responses.
  */
 class Race
 {
     use DtoClientTrait;
 
     public function __construct(
-        // Core identifiers
-        public readonly ?int $id = null,
-        public readonly ?string $name = null,
-        public readonly ?string $url = null,
+        // REQUIRED PARAMETERS - always present
+        public readonly int $id,
+        public readonly string $name,
+        public readonly string $url,
+        public readonly RaceState $state,
+        public readonly RaceType $race_type,
+        public readonly string $created_at,
+        public readonly string $updated_at,
+        public readonly string $full_challonge_url,
 
-        // Race configuration
-        public readonly ?string $state = null,
+        // OPTIONAL WITH DEFAULTS
+        public readonly int $current_round = 0,
+        public readonly int $participants_count = 0,
+        public readonly bool $private = false,
+        public readonly bool $notify_users_when_matches_open = true,
+        public readonly bool $notify_users_when_the_tournament_ends = true,
+        public readonly bool $created_by_api = false,
+
+        // NULLABLE OPTIONAL PARAMETERS
         public readonly ?string $description = null,
-        public readonly ?string $race_type = null,
-
-        // Timing
         public readonly ?int $target_round_count = null,
-        public readonly ?int $current_round = null,
-
-        // Participants
-        public readonly ?int $participants_count = null,
         public readonly ?int $signup_cap = null,
-
-        // Settings
-        public readonly ?bool $private = null,
-        public readonly ?bool $notify_users_when_matches_open = null,
-        public readonly ?bool $notify_users_when_the_tournament_ends = null,
-
-        // Timestamps
-        public readonly ?string $created_at = null,
-        public readonly ?string $updated_at = null,
         public readonly ?string $start_at = null,
         public readonly ?string $started_at = null,
         public readonly ?string $completed_at = null,
-
-        // URLs
-        public readonly ?string $full_challonge_url = null,
         public readonly ?string $live_image_url = null,
         public readonly ?string $sign_up_url = null,
-
-        // Metadata
-        public readonly ?bool $created_by_api = null,
         public readonly ?int $game_id = null,
         public readonly ?string $game_name = null,
     ) {

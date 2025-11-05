@@ -10,31 +10,30 @@ use Reflex\Challonge\DtoClientTrait;
  * Elapsed Time DTO
  *
  * Represents a participant's elapsed time in a race round.
+ * Properties are typed based on Challonge API v2.1 responses.
  */
 class ElapsedTime
 {
     use DtoClientTrait;
 
     public function __construct(
-        // Core identifiers
-        public readonly ?int $id = null,
-        public readonly ?int $round_id = null,
-        public readonly ?int $participant_id = null,
+        // REQUIRED PARAMETERS - always present
+        public readonly int $id,
+        public readonly int $round_id,
+        public readonly int $participant_id,
+        public readonly string $created_at,
+        public readonly string $updated_at,
 
-        // Time data
+        // OPTIONAL WITH DEFAULTS
+        public readonly bool $disqualified = false,
+        public readonly bool $dnf = false, // Did Not Finish
+        public readonly bool $dns = false, // Did Not Start
+
+        // NULLABLE OPTIONAL PARAMETERS
         public readonly ?float $elapsed_time_millis = null,
         public readonly ?float $elapsed_time_seconds = null,
         public readonly ?string $display_time = null,
-
-        // Status
         public readonly ?int $rank = null,
-        public readonly ?bool $disqualified = null,
-        public readonly ?bool $dnf = null, // Did Not Finish
-        public readonly ?bool $dns = null, // Did Not Start
-
-        // Timestamps
-        public readonly ?string $created_at = null,
-        public readonly ?string $updated_at = null,
         public readonly ?string $started_at = null,
         public readonly ?string $finished_at = null,
     ) {

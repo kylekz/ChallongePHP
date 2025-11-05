@@ -110,7 +110,7 @@ class TournamentTest extends TestCase
 
         $response = $tournament->start();
 
-        $this->assertEquals('underway', $response->state);
+        $this->assertEquals(\Reflex\Challonge\Enums\TournamentState::UNDERWAY, $response->state);
     }
 
     public function test_tournament_finalize(): void
@@ -130,7 +130,7 @@ class TournamentTest extends TestCase
 
         $response = $tournament->finalize();
 
-        $this->assertEquals('complete', $response->state);
+        $this->assertEquals(\Reflex\Challonge\Enums\TournamentState::COMPLETE, $response->state);
     }
 
     public function test_tournament_reset(): void

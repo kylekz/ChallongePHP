@@ -6,6 +6,8 @@ namespace Reflex\Challonge\DTO;
 
 use Illuminate\Support\Collection;
 use Reflex\Challonge\DtoClientTrait;
+use Reflex\Challonge\Enums\TournamentState;
+use Reflex\Challonge\Enums\TournamentType;
 use Reflex\Challonge\Exceptions\AlreadyStartedException;
 use Reflex\Challonge\Exceptions\StillRunningException;
 
@@ -24,8 +26,8 @@ class Tournament
         // Core identifiers - always present
         public readonly int $id,
         public readonly string $name,
-        public readonly string $tournament_type,
-        public readonly string $state,
+        public readonly TournamentType $tournament_type,
+        public readonly TournamentState $state,
 
         // Timestamps - always present
         public readonly string $created_at,
@@ -177,7 +179,7 @@ class Tournament
      */
     public function finalize(): self
     {
-        if ($this->state !== 'awaiting_review') {
+        if ($this->state !== TournamentState::AWAITING_REVIEW) {
             throw new StillRunningException('Tournament is still running.');
         }
 
@@ -283,7 +285,7 @@ class Tournament
      */
     public function processCheckins(): self
     {
-        if ($this->state === 'underway' || $this->state === 'in_progress') {
+        if ($this->state === TournamentState::UNDERWAY) {
             throw new AlreadyStartedException('Tournament is already underway.');
         }
 
@@ -304,7 +306,7 @@ class Tournament
      */
     public function abortCheckins(): self
     {
-        if ($this->state === 'underway' || $this->state === 'in_progress') {
+        if ($this->state === TournamentState::UNDERWAY) {
             throw new AlreadyStartedException('Tournament is already underway.');
         }
 

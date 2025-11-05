@@ -54,8 +54,8 @@ class EntityTest extends TestCase
         $this->assertEquals(30201, $tournament->id);
         $this->assertEquals('Example Tournament', $tournament->name);
         $this->assertEquals('example_tournament', $tournament->url);
-        $this->assertEquals('single_elimination', $tournament->tournament_type);
-        $this->assertEquals('pending', $tournament->state);
+        $this->assertEquals(\Reflex\Challonge\Enums\TournamentType::SINGLE_ELIMINATION, $tournament->tournament_type);
+        $this->assertEquals(\Reflex\Challonge\Enums\TournamentState::PENDING, $tournament->state);
         $this->assertEquals(8, $tournament->participants_count);
         $this->assertEquals(16, $tournament->signup_cap);
         $this->assertTrue($tournament->notify_users_when_matches_open);
@@ -108,7 +108,7 @@ class EntityTest extends TestCase
         $this->assertEquals(98765, $match->id);
         $this->assertEquals(30201, $match->tournament_id);
         $this->assertEquals('A', $match->identifier);
-        $this->assertEquals('open', $match->state);
+        $this->assertEquals(\Reflex\Challonge\Enums\MatchState::OPEN, $match->state);
         $this->assertEquals(12345, $match->player1_id);
         $this->assertEquals(12346, $match->player2_id);
         $this->assertNull($match->winner_id);
@@ -150,8 +150,8 @@ class EntityTest extends TestCase
         $this->assertEquals(50301, $race->id);
         $this->assertEquals('Speed Run Championship', $race->name);
         $this->assertEquals('speedrun_championship', $race->url);
-        $this->assertEquals('pending', $race->state);
-        $this->assertEquals('time_trial', $race->race_type);
+        $this->assertEquals(\Reflex\Challonge\Enums\RaceState::PENDING, $race->state);
+        $this->assertEquals(\Reflex\Challonge\Enums\RaceType::TIME_TRIAL, $race->race_type);
         $this->assertEquals(3, $race->target_round_count);
         $this->assertEquals(0, $race->current_round);
         $this->assertEquals(16, $race->participants_count);

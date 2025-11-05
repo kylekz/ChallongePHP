@@ -11,29 +11,28 @@ use Reflex\Challonge\DtoClientTrait;
  * Round DTO
  *
  * Represents a round within a race tournament.
+ * Properties are typed based on Challonge API v2.1 responses.
  */
 class Round
 {
     use DtoClientTrait;
 
     public function __construct(
-        // Core identifiers
-        public readonly ?int $id = null,
-        public readonly ?int $race_id = null,
+        // REQUIRED PARAMETERS - always present
+        public readonly int $id,
+        public readonly int $race_id,
+        public readonly string $created_at,
+        public readonly string $updated_at,
 
-        // Round info
-        public readonly ?int $number = null,
+        // OPTIONAL WITH DEFAULTS
+        public readonly int $number = 1,
+        public readonly int $elapsed_times_count = 0,
+
+        // NULLABLE OPTIONAL PARAMETERS
         public readonly ?string $state = null,
         public readonly ?string $name = null,
-
-        // Timestamps
-        public readonly ?string $created_at = null,
-        public readonly ?string $updated_at = null,
         public readonly ?string $started_at = null,
         public readonly ?string $completed_at = null,
-
-        // Metadata
-        public readonly ?int $elapsed_times_count = null,
     ) {
     }
 

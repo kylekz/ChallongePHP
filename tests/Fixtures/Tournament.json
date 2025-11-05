@@ -6,7 +6,7 @@
       "id": 30201,
       "name": "Example Tournament",
       "url": "example_tournament",
-      "tournament_type": "single_elimination",
+      "tournament_type": "single elimination",
       "state": "pending",
       "participants_count": 8,
       "signup_cap": 16,
