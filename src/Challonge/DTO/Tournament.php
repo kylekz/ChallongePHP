@@ -1,348 +1,415 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Reflex\Challonge\DTO;
 
 use Illuminate\Support\Collection;
 use Reflex\Challonge\DtoClientTrait;
-use Reflex\Challonge\Exceptions\StillRunningException;
 use Reflex\Challonge\Exceptions\AlreadyStartedException;
-use Spatie\DataTransferObject\DataTransferObject;
+use Reflex\Challonge\Exceptions\StillRunningException;
 
-class Tournament extends DataTransferObject
+/**
+ * Tournament DTO
+ *
+ * Note: All properties are nullable because Challonge's API is not stable
+ * and frequently adds/changes fields. The v2.1 API uses JSON API format.
+ */
+class Tournament
 {
     use DtoClientTrait;
 
-    /**
-     * Due to Challonge not locking their API and constantly adding new fields...
-     * @var bool
-     */
-    protected bool $ignoreMissing = true;
+    public function __construct(
+        // Core identifiers
+        public readonly ?int $id = null,
+        public readonly ?string $name = null,
+        public readonly ?string $url = null,
 
-    public int $id;
-    public string $name;
-    public string $url;
-    public string $description;
-    public string $tournament_type;
-    public ?string $started_at;
-    public ?string $completed_at;
-    public bool $require_score_agreement;
-    public bool $notify_users_when_matches_open;
-    public string $created_at;
-    public string $updated_at;
-    public string $state;
-    public bool $open_signup;
-    public bool $notify_users_when_the_tournament_ends;
-    public int $progress_meter;
-    public bool $quick_advance;
-    public bool $hold_third_place_match;
-    public string $pts_for_game_win;
-    public string $pts_for_game_tie;
-    public string $pts_for_match_win;
-    public string $pts_for_match_tie;
-    public string $pts_for_bye;
-    public int $swiss_rounds;
-    public bool $private;
-    public ?string $ranked_by;
-    public bool $show_rounds;
-    public bool $hide_forum;
-    public bool $sequential_pairings;
-    public bool $accept_attachments;
-    public string $rr_pts_for_game_win;
-    public string $rr_pts_for_game_tie;
-    public string $rr_pts_for_match_win;
-    public string $rr_pts_for_match_tie;
-    public bool $created_by_api;
-    public bool $credit_capped;
-    public ?int $category;
-    public bool $hide_seeds;
-    public int $prediction_method;
-    public ?string $predictions_opened_at;
-    public bool $anonymous_voting;
-    public int $max_predictions_per_user;
-    public ?int $signup_cap;
-    public ?int $game_id;
-    public int $participants_count;
-    public bool $group_stages_enabled;
-    public bool $allow_participant_match_reporting;
-    public $teams;
-    public $check_in_duration;
-    public ?string $start_at;
-    public ?string $started_checking_in_at;
-    public $tie_breaks;
-    public ?string $locked_at;
-    public ?int $event_id;
-    public ?bool $public_predictions_before_start_time;
-    public $ranked;
-    public ?string $grand_finals_modifier;
-    public $predict_the_losers_bracket;
-    public $spam;
-    public $ham;
-    public ?int $rr_iterations;
-    public ?int $tournament_registration_id;
-    public ?bool $donation_contest_enabled;
-    public ?bool $mandatory_donation;
-    public $non_elimination_tournament_data;
-    public ?bool $auto_assign_stations;
-    public ?bool $only_start_matches_with_stations;
-    public string $registration_fee;
-    public string $registration_type;
-    public bool $split_participants;
-    public ?array $allowed_regions;
-    public ?bool $show_participant_country;
-    public ?int $program_id;
-    public $program_classification_ids_allowed;
-    public string $description_source;
-    public ?string $subdomain;
-    public string $full_challonge_url;
-    public string $live_image_url;
-    public ?string $sign_up_url;
-    public bool $review_before_finalizing;
-    public bool $accepting_predictions;
-    public bool $participants_locked;
-    public ?string $game_name;
-    public bool $participants_swappable;
-    public bool $team_convertable;
-    public bool $group_stages_were_started;
-    public ?string $team_size_range;
-    public ?bool $toxic;
-    public ?bool $use_new_style;
-    public array $optional_display_data;
+        // Tournament configuration
+        public readonly ?string $tournament_type = null,
+        public readonly ?string $state = null,
+        public readonly ?string $description = null,
+        public readonly ?string $description_source = null,
 
-    /**
-     * Start a tournament, opening up first round matches for score reporting.
-     * @return Tournament
-     * @throws AlreadyStartedException
-     * @throws \JsonException
-     * @throws \Reflex\Challonge\Exceptions\InvalidFormatException
-     * @throws \Reflex\Challonge\Exceptions\NotFoundException
-     * @throws \Reflex\Challonge\Exceptions\ServerException
-     * @throws \Reflex\Challonge\Exceptions\UnauthorizedException
-     * @throws \Reflex\Challonge\Exceptions\UnexpectedErrorException
-     * @throws \Reflex\Challonge\Exceptions\ValidationException
-     */
-    public function start(): Tournament
-    {
-        if ($this->state === 'underway') {
-            throw new AlreadyStartedException('Tournament is already underway.');
-        }
+        // Dates
+        public readonly ?string $created_at = null,
+        public readonly ?string $updated_at = null,
+        public readonly ?string $start_at = null,
+        public readonly ?string $started_at = null,
+        public readonly ?string $completed_at = null,
+        public readonly ?string $started_checking_in_at = null,
+        public readonly ?string $locked_at = null,
+        public readonly ?string $predictions_opened_at = null,
 
-        $response = $this->client->request('POST', "tournaments/{$this->id}/start", 'form');
-        return self::fromResponse($this->client, $response['tournament']);
+        // Tournament settings
+        public readonly ?bool $open_signup = null,
+        public readonly ?bool $private = null,
+        public readonly ?bool $notify_users_when_matches_open = null,
+        public readonly ?bool $notify_users_when_the_tournament_ends = null,
+        public readonly ?bool $require_score_agreement = null,
+        public readonly ?bool $accept_attachments = null,
+        public readonly ?bool $hide_forum = null,
+        public readonly ?bool $show_rounds = null,
+        public readonly ?bool $sequential_pairings = null,
+
+        // Bracket/Match settings
+        public readonly ?bool $quick_advance = null,
+        public readonly ?bool $hold_third_place_match = null,
+        public readonly ?bool $hide_seeds = null,
+        public readonly ?string $ranked_by = null,
+        public readonly ?string $grand_finals_modifier = null,
+
+        // Points/Scoring
+        public readonly ?string $pts_for_game_win = null,
+        public readonly ?string $pts_for_game_tie = null,
+        public readonly ?string $pts_for_match_win = null,
+        public readonly ?string $pts_for_match_tie = null,
+        public readonly ?string $pts_for_bye = null,
+        public readonly ?string $rr_pts_for_game_win = null,
+        public readonly ?string $rr_pts_for_game_tie = null,
+        public readonly ?string $rr_pts_for_match_win = null,
+        public readonly ?string $rr_pts_for_match_tie = null,
+
+        // Swiss/Round Robin
+        public readonly ?int $swiss_rounds = null,
+        public readonly ?int $rr_iterations = null,
+
+        // Participants
+        public readonly ?int $participants_count = null,
+        public readonly ?int $signup_cap = null,
+        public readonly ?bool $participants_locked = null,
+        public readonly ?bool $participants_swappable = null,
+        public readonly ?bool $allow_participant_match_reporting = null,
+        public readonly ?bool $split_participants = null,
+        public readonly ?bool $show_participant_country = null,
+
+        // Teams
+        public readonly mixed $teams = null,
+        public readonly ?bool $team_convertable = null,
+        public readonly ?string $team_size_range = null,
+
+        // Check-in
+        public readonly mixed $check_in_duration = null,
+
+        // Progress/Status
+        public readonly ?int $progress_meter = null,
+        public readonly ?bool $review_before_finalizing = null,
+
+        // Predictions
+        public readonly ?int $prediction_method = null,
+        public readonly ?bool $anonymous_voting = null,
+        public readonly ?int $max_predictions_per_user = null,
+        public readonly ?bool $accepting_predictions = null,
+        public readonly ?bool $public_predictions_before_start_time = null,
+        public readonly mixed $predict_the_losers_bracket = null,
+
+        // Group stages
+        public readonly ?bool $group_stages_enabled = null,
+        public readonly ?bool $group_stages_were_started = null,
+
+        // API/Meta
+        public readonly ?bool $created_by_api = null,
+        public readonly ?bool $credit_capped = null,
+        public readonly mixed $tie_breaks = null,
+        public readonly mixed $ranked = null,
+        public readonly mixed $spam = null,
+        public readonly mixed $ham = null,
+        public readonly mixed $toxic = null,
+        public readonly ?bool $use_new_style = null,
+
+        // Registration
+        public readonly ?string $registration_fee = null,
+        public readonly ?string $registration_type = null,
+        public readonly ?int $tournament_registration_id = null,
+        public readonly ?bool $donation_contest_enabled = null,
+        public readonly ?bool $mandatory_donation = null,
+
+        // Stations
+        public readonly ?bool $auto_assign_stations = null,
+        public readonly ?bool $only_start_matches_with_stations = null,
+
+        // Categories/Games
+        public readonly ?int $category = null,
+        public readonly ?int $game_id = null,
+        public readonly ?string $game_name = null,
+        public readonly ?int $event_id = null,
+        public readonly ?int $program_id = null,
+        public readonly mixed $program_classification_ids_allowed = null,
+        public readonly mixed $non_elimination_tournament_data = null,
+
+        // URLs
+        public readonly ?string $subdomain = null,
+        public readonly ?string $full_challonge_url = null,
+        public readonly ?string $live_image_url = null,
+        public readonly ?string $sign_up_url = null,
+
+        // Regions
+        public readonly ?array $allowed_regions = null,
+
+        // Display
+        public readonly ?array $optional_display_data = null,
+    ) {
     }
 
     /**
-     * Finalize a tournament that has had all match scores submitted, rendering its results permanent.
-     * @return Tournament
-     * @throws StillRunningException
-     * @throws \JsonException
+     * Start a tournament, opening up first round matches for score reporting
+     *
+     * @throws AlreadyStartedException
      * @throws \Reflex\Challonge\Exceptions\InvalidFormatException
      * @throws \Reflex\Challonge\Exceptions\NotFoundException
      * @throws \Reflex\Challonge\Exceptions\ServerException
      * @throws \Reflex\Challonge\Exceptions\UnauthorizedException
-     * @throws \Reflex\Challonge\Exceptions\UnexpectedErrorException
      * @throws \Reflex\Challonge\Exceptions\ValidationException
      */
-    public function finalize(): Tournament
+    public function start(): self
+    {
+        if ($this->state === 'underway' || $this->state === 'in_progress') {
+            throw new AlreadyStartedException('Tournament is already underway.');
+        }
+
+        $response = $this->client->request('POST', "tournaments/{$this->id}/change_state", [
+            'data' => [
+                'type' => 'tournaments',
+                'id' => (string) $this->id,
+                'attributes' => [
+                    'state' => 'start',
+                ],
+            ],
+        ]);
+
+        return self::fromResponse($this->client, $response['data'] ?? $response);
+    }
+
+    /**
+     * Finalize a tournament that has had all match scores submitted
+     *
+     * @throws StillRunningException
+     * @throws \Reflex\Challonge\Exceptions\InvalidFormatException
+     * @throws \Reflex\Challonge\Exceptions\NotFoundException
+     * @throws \Reflex\Challonge\Exceptions\ServerException
+     * @throws \Reflex\Challonge\Exceptions\UnauthorizedException
+     * @throws \Reflex\Challonge\Exceptions\ValidationException
+     */
+    public function finalize(): self
     {
         if ($this->state !== 'awaiting_review') {
             throw new StillRunningException('Tournament is still running.');
         }
 
-        $response = $this->client->request('POST', "tournaments/{$this->id}/finalize", 'form');
-        return self::fromResponse($this->client, $response['tournament']);
+        $response = $this->client->request('POST', "tournaments/{$this->id}/change_state", [
+            'data' => [
+                'type' => 'tournaments',
+                'id' => (string) $this->id,
+                'attributes' => [
+                    'state' => 'finalize',
+                ],
+            ],
+        ]);
+
+        return self::fromResponse($this->client, $response['data'] ?? $response);
     }
 
     /**
-     * Reset a tournament, clearing all of its scores and attachments.
-     * @return Tournament
-     * @throws \JsonException
+     * Reset a tournament, clearing all of its scores and attachments
+     *
      * @throws \Reflex\Challonge\Exceptions\InvalidFormatException
      * @throws \Reflex\Challonge\Exceptions\NotFoundException
      * @throws \Reflex\Challonge\Exceptions\ServerException
      * @throws \Reflex\Challonge\Exceptions\UnauthorizedException
-     * @throws \Reflex\Challonge\Exceptions\UnexpectedErrorException
      * @throws \Reflex\Challonge\Exceptions\ValidationException
      */
-    public function reset(): Tournament
+    public function reset(): self
     {
-        $response = $this->client->request('POST', "tournaments/{$this->id}/reset", 'form');
-        return self::fromResponse($this->client, $response['tournament']);
+        $response = $this->client->request('POST', "tournaments/{$this->id}/change_state", [
+            'data' => [
+                'type' => 'tournaments',
+                'id' => (string) $this->id,
+                'attributes' => [
+                    'state' => 'reset',
+                ],
+            ],
+        ]);
+
+        return self::fromResponse($this->client, $response['data'] ?? $response);
     }
 
     /**
-     * Update a tournament's attributes.
-     * @param array $options
-     * @return Tournament
-     * @throws \JsonException
+     * Update a tournament's attributes
+     *
+     * @param array<string, mixed> $attributes
      * @throws \Reflex\Challonge\Exceptions\InvalidFormatException
      * @throws \Reflex\Challonge\Exceptions\NotFoundException
      * @throws \Reflex\Challonge\Exceptions\ServerException
      * @throws \Reflex\Challonge\Exceptions\UnauthorizedException
-     * @throws \Reflex\Challonge\Exceptions\UnexpectedErrorException
      * @throws \Reflex\Challonge\Exceptions\ValidationException
      */
-    public function update(array $options = []): Tournament
+    public function update(array $attributes = []): self
     {
-        $response = $this->client->request('PUT', "tournaments/{$this->id}", 'form', $this->client->mapOptions($options, 'tournament'));
-        return self::fromResponse($this->client, $response['tournament']);
+        $response = $this->client->request('PUT', "tournaments/{$this->id}", [
+            'data' => [
+                'type' => 'tournaments',
+                'id' => (string) $this->id,
+                'attributes' => $attributes,
+            ],
+        ]);
+
+        return self::fromResponse($this->client, $response['data'] ?? $response);
     }
 
     /**
-     * Deletes a tournament along with all its associated records.
-     * @return Tournament
-     * @throws \JsonException
+     * Delete a tournament along with all its associated records
+     *
      * @throws \Reflex\Challonge\Exceptions\InvalidFormatException
      * @throws \Reflex\Challonge\Exceptions\NotFoundException
      * @throws \Reflex\Challonge\Exceptions\ServerException
      * @throws \Reflex\Challonge\Exceptions\UnauthorizedException
-     * @throws \Reflex\Challonge\Exceptions\UnexpectedErrorException
      * @throws \Reflex\Challonge\Exceptions\ValidationException
      */
-    public function delete(): Tournament
+    public function delete(): void
     {
-        $response = $this->client->request('DELETE', "tournaments/{$this->id}", 'form');
-        return self::fromResponse($this->client, $response['tournament']);
+        $this->client->request('DELETE', "tournaments/{$this->id}");
     }
 
     /**
-     * Removes all participants.
-     * @return Tournament
-     * @throws \JsonException
+     * Remove all participants
+     *
      * @throws \Reflex\Challonge\Exceptions\InvalidFormatException
      * @throws \Reflex\Challonge\Exceptions\NotFoundException
      * @throws \Reflex\Challonge\Exceptions\ServerException
      * @throws \Reflex\Challonge\Exceptions\UnauthorizedException
-     * @throws \Reflex\Challonge\Exceptions\UnexpectedErrorException
      * @throws \Reflex\Challonge\Exceptions\ValidationException
      */
-    public function clear(): Tournament
+    public function clear(): self
     {
-        $response = $this->client->request('POST', "tournaments/{$this->id}/participants/clear", 'form');
-        return self::fromResponse($this->client, $response['tournament']);
+        $response = $this->client->request('POST', "tournaments/{$this->id}/participants/clear");
+
+        return self::fromResponse($this->client, $response['data'] ?? $response);
     }
 
     /**
-     * Processes all checkins before the tournament has started.
-     * @return Tournament
+     * Process all check-ins before the tournament has started
+     *
      * @throws AlreadyStartedException
-     * @throws \JsonException
      * @throws \Reflex\Challonge\Exceptions\InvalidFormatException
      * @throws \Reflex\Challonge\Exceptions\NotFoundException
      * @throws \Reflex\Challonge\Exceptions\ServerException
      * @throws \Reflex\Challonge\Exceptions\UnauthorizedException
-     * @throws \Reflex\Challonge\Exceptions\UnexpectedErrorException
      * @throws \Reflex\Challonge\Exceptions\ValidationException
      */
-    public function processCheckins(): Tournament
+    public function processCheckins(): self
     {
-        if ($this->state === 'underway') {
+        if ($this->state === 'underway' || $this->state === 'in_progress') {
             throw new AlreadyStartedException('Tournament is already underway.');
         }
 
-        $response = $this->client->request('POST', "tournaments/{$this->id}/process_check_ins", 'form');
-        return self::fromResponse($this->client, $response['tournament']);
+        $response = $this->client->request('POST', "tournaments/{$this->id}/process_check_ins");
+
+        return self::fromResponse($this->client, $response['data'] ?? $response);
     }
 
     /**
-     * Cancels all checkins before the tournament has started.
-     * @return Tournament
+     * Cancel all check-ins before the tournament has started
+     *
      * @throws AlreadyStartedException
-     * @throws \JsonException
      * @throws \Reflex\Challonge\Exceptions\InvalidFormatException
      * @throws \Reflex\Challonge\Exceptions\NotFoundException
      * @throws \Reflex\Challonge\Exceptions\ServerException
      * @throws \Reflex\Challonge\Exceptions\UnauthorizedException
-     * @throws \Reflex\Challonge\Exceptions\UnexpectedErrorException
      * @throws \Reflex\Challonge\Exceptions\ValidationException
      */
-    public function abortCheckins(): Tournament
+    public function abortCheckins(): self
     {
-        if ($this->state === 'underway') {
+        if ($this->state === 'underway' || $this->state === 'in_progress') {
             throw new AlreadyStartedException('Tournament is already underway.');
         }
 
-        $response = $this->client->request('POST', "tournaments/{$this->id}/abort_check_in", 'form');
-        return self::fromResponse($this->client, $response['tournament']);
+        $response = $this->client->request('POST', "tournaments/{$this->id}/abort_check_in");
+
+        return self::fromResponse($this->client, $response['data'] ?? $response);
     }
 
     /**
-     * Add a participant to a tournament (up until it is started).
-     * @param array $options
-     * @return Participant
-     * @throws \JsonException
+     * Add a participant to a tournament (up until it is started)
+     *
+     * @param array<string, mixed> $attributes
      * @throws \Reflex\Challonge\Exceptions\InvalidFormatException
      * @throws \Reflex\Challonge\Exceptions\NotFoundException
      * @throws \Reflex\Challonge\Exceptions\ServerException
      * @throws \Reflex\Challonge\Exceptions\UnauthorizedException
-     * @throws \Reflex\Challonge\Exceptions\UnexpectedErrorException
      * @throws \Reflex\Challonge\Exceptions\ValidationException
      */
-    public function addParticipant(array $options = []): Participant
+    public function addParticipant(array $attributes = []): Participant
     {
-        $response = $this->client->request('POST', "tournaments/{$this->id}/participants", 'form', $this->client->mapOptions($options, 'participant'));
-        return Participant::fromResponse($this->client, $response['participant']);
+        $response = $this->client->request('POST', "tournaments/{$this->id}/participants", [
+            'data' => [
+                'type' => 'participants',
+                'attributes' => $attributes,
+            ],
+        ]);
+
+        return Participant::fromResponse($this->client, $response['data'] ?? $response);
     }
 
     /**
-     * Bulk add participants to a tournament (up until it is started).
-     * @param array $options
-     * @return Collection
-     * @throws \JsonException
+     * Bulk add participants to a tournament (up until it is started)
+     *
+     * @param array<array<string, mixed>> $participants
+     * @return Collection<int, Participant>
      * @throws \Reflex\Challonge\Exceptions\InvalidFormatException
      * @throws \Reflex\Challonge\Exceptions\NotFoundException
      * @throws \Reflex\Challonge\Exceptions\ServerException
      * @throws \Reflex\Challonge\Exceptions\UnauthorizedException
-     * @throws \Reflex\Challonge\Exceptions\UnexpectedErrorException
      * @throws \Reflex\Challonge\Exceptions\ValidationException
      */
-    public function bulkAddParticipant(array $options = []): Collection
+    public function bulkAddParticipant(array $participants): Collection
     {
-        // have to bypass the mapOptions function as the format is a bit different
-        if ($this->client->getMapOptions()) {
-            $options = [
-                'participants' => $options,
-            ];
-        }
+        $response = $this->client->request('POST', "tournaments/{$this->id}/participants/bulk_add", [
+            'data' => array_map(fn (array $p) => [
+                'type' => 'participants',
+                'attributes' => $p,
+            ], $participants),
+        ]);
 
-        $response = $this->client->request('POST', "tournaments/{$this->id}/participants/bulk_add", 'json', $options);
-        return Collection::make($response)
-            ->map(fn (array $participant) => Participant::fromResponse($this->client, $participant['participant']));
+        $data = $response['data'] ?? $response;
+
+        return Collection::make($data)
+            ->map(fn (array $participant) => Participant::fromResponse($this->client, $participant));
     }
 
     /**
-     * If the tournament has not started, delete a participant, automatically filling in the abandoned seed number.
-     * @param int $id
-     * @return Participant
-     * @throws \JsonException
+     * Delete a participant (before tournament starts)
+     *
      * @throws \Reflex\Challonge\Exceptions\InvalidFormatException
      * @throws \Reflex\Challonge\Exceptions\NotFoundException
      * @throws \Reflex\Challonge\Exceptions\ServerException
      * @throws \Reflex\Challonge\Exceptions\UnauthorizedException
-     * @throws \Reflex\Challonge\Exceptions\UnexpectedErrorException
      * @throws \Reflex\Challonge\Exceptions\ValidationException
      */
-    public function deleteParticipant(int $id): Participant
+    public function deleteParticipant(int $id): void
     {
-        $response = $this->client->request('DELETE', "tournaments/{$this->id}/participants/{$id}", 'form');
-        return Participant::fromResponse($this->client, $response['participant']);
+        $this->client->request('DELETE', "tournaments/{$this->id}/participants/{$id}");
     }
 
     /**
-     * Update the attributes of a tournament participant.
-     * @param int $id
-     * @param array $options
-     * @return Participant
-     * @throws \JsonException
+     * Update a tournament participant's attributes
+     *
+     * @param array<string, mixed> $attributes
      * @throws \Reflex\Challonge\Exceptions\InvalidFormatException
      * @throws \Reflex\Challonge\Exceptions\NotFoundException
      * @throws \Reflex\Challonge\Exceptions\ServerException
      * @throws \Reflex\Challonge\Exceptions\UnauthorizedException
-     * @throws \Reflex\Challonge\Exceptions\UnexpectedErrorException
      * @throws \Reflex\Challonge\Exceptions\ValidationException
      */
-    public function updateParticipant(int $id, array $options = []): Participant
+    public function updateParticipant(int $id, array $attributes = []): Participant
     {
-        $response = $this->client->request('PUT', "tournaments/{$this->id}/participants/{$id}", 'form', $this->client->mapOptions($options, 'participant'));
-        return Participant::fromResponse($this->client, $response['participant']);
+        $response = $this->client->request('PUT', "tournaments/{$this->id}/participants/{$id}", [
+            'data' => [
+                'type' => 'participants',
+                'id' => (string) $id,
+                'attributes' => $attributes,
+            ],
+        ]);
+
+        return Participant::fromResponse($this->client, $response['data'] ?? $response);
     }
 }
