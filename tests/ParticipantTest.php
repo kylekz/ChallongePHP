@@ -40,7 +40,7 @@ class ParticipantTest extends BaseTestCase
 
         $participant = Participant::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/participant_fetch.json'), true)['participant']
+            json_decode(file_get_contents(__DIR__ . '/stubs/participant_fetch.json'), true)['data']
         );
 
         $response = $participant->update();
@@ -50,16 +50,17 @@ class ParticipantTest extends BaseTestCase
 
     public function test_participant_delete(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/participant_fetch.json')));
+        $this->mockHandler->append(new Response(204, [])); // DELETE returns 204 No Content
 
         $participant = Participant::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/participant_fetch.json'), true)['participant']
+            json_decode(file_get_contents(__DIR__ . '/stubs/participant_fetch.json'), true)['data']
         );
 
-        $response = $participant->delete();
+        $participant->delete();
 
-        $this->assertEquals('Team 1', $response->display_name);
+        // Assert that delete completed without exception
+        $this->assertTrue(true);
     }
 
     public function test_participant_checkin(): void
@@ -68,7 +69,7 @@ class ParticipantTest extends BaseTestCase
 
         $participant = Participant::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/participant_fetch.json'), true)['participant']
+            json_decode(file_get_contents(__DIR__ . '/stubs/participant_fetch.json'), true)['data']
         );
 
         $response = $participant->checkin();
@@ -82,7 +83,7 @@ class ParticipantTest extends BaseTestCase
 
         $participant = Participant::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/participant_fetch.json'), true)['participant']
+            json_decode(file_get_contents(__DIR__ . '/stubs/participant_fetch.json'), true)['data']
         );
 
         $response = $participant->undoCheckin();

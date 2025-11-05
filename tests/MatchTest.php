@@ -31,7 +31,7 @@ class MatchTest extends BaseTestCase
 
         $match = MatchDto::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/match_fetch.json'), true)['match']
+            json_decode(file_get_contents(__DIR__ . '/stubs/match_fetch.json'), true)['data']
         );
 
         $response = $match->update();
@@ -45,7 +45,7 @@ class MatchTest extends BaseTestCase
 
         $match = MatchDto::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/match_fetch.json'), true)['match']
+            json_decode(file_get_contents(__DIR__ . '/stubs/match_fetch.json'), true)['data']
         );
 
         $response = $match->reopen();
@@ -59,7 +59,7 @@ class MatchTest extends BaseTestCase
 
         $match = MatchDto::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/match_fetch.json'), true)['match']
+            json_decode(file_get_contents(__DIR__ . '/stubs/match_fetch.json'), true)['data']
         );
 
         $response = $match->markAsUnderway();
@@ -73,7 +73,7 @@ class MatchTest extends BaseTestCase
 
         $match = MatchDto::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/match_fetch.json'), true)['match']
+            json_decode(file_get_contents(__DIR__ . '/stubs/match_fetch.json'), true)['data']
         );
 
         $response = $match->unmarkAsUnderway();

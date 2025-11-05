@@ -45,16 +45,17 @@ class TournamentTest extends BaseTestCase
 
     public function test_tournament_delete(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/tournament_fetch.json')));
+        $this->mockHandler->append(new Response(204, [])); // DELETE returns 204 No Content
 
         $tournament = Tournament::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_fetch.json'), true)['tournament']
+            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_fetch.json'), true)['data']
         );
 
-        $response = $tournament->delete();
+        $tournament->delete();
 
-        $this->assertEquals('challongephp test', $response->name);
+        // Assert that delete completed without exception
+        $this->assertTrue(true);
     }
 
     public function test_tournament_start(): void
@@ -63,7 +64,7 @@ class TournamentTest extends BaseTestCase
 
         $tournament = Tournament::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_start.json'), true)['tournament']
+            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_start.json'), true)['data']
         );
 
         $response = $tournament->start();
@@ -77,7 +78,7 @@ class TournamentTest extends BaseTestCase
 
         $tournament = Tournament::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_finalize1.json'), true)['tournament']
+            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_finalize1.json'), true)['data']
         );
 
         $response = $tournament->finalize();
@@ -91,7 +92,7 @@ class TournamentTest extends BaseTestCase
 
         $tournament = Tournament::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_fetch.json'), true)['tournament']
+            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_fetch.json'), true)['data']
         );
 
         $response = $tournament->reset();
@@ -105,7 +106,7 @@ class TournamentTest extends BaseTestCase
 
         $tournament = Tournament::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_fetch.json'), true)['tournament']
+            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_fetch.json'), true)['data']
         );
 
         $response = $tournament->update();
@@ -115,16 +116,17 @@ class TournamentTest extends BaseTestCase
 
     public function test_tournament_delete_self(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/tournament_fetch.json')));
+        $this->mockHandler->append(new Response(204, [])); // DELETE returns 204 No Content
 
         $tournament = Tournament::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_fetch.json'), true)['tournament']
+            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_fetch.json'), true)['data']
         );
 
-        $response = $tournament->delete();
+        $tournament->delete();
 
-        $this->assertEquals('challongephp test', $response->name);
+        // Assert that delete completed without exception
+        $this->assertTrue(true);
     }
 
     public function test_tournament_clear(): void
@@ -133,7 +135,7 @@ class TournamentTest extends BaseTestCase
 
         $tournament = Tournament::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_fetch.json'), true)['tournament']
+            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_fetch.json'), true)['data']
         );
 
         $response = $tournament->clear();
@@ -147,7 +149,7 @@ class TournamentTest extends BaseTestCase
 
         $tournament = Tournament::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_start.json'), true)['tournament']
+            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_start.json'), true)['data']
         );
 
         $response = $tournament->processCheckins();
@@ -161,7 +163,7 @@ class TournamentTest extends BaseTestCase
 
         $tournament = Tournament::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_start.json'), true)['tournament']
+            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_start.json'), true)['data']
         );
 
         $response = $tournament->abortCheckins();
@@ -175,7 +177,7 @@ class TournamentTest extends BaseTestCase
 
         $tournament = Tournament::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_fetch.json'), true)['tournament']
+            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_fetch.json'), true)['data']
         );
 
         $response = $tournament->addParticipant();
@@ -189,7 +191,7 @@ class TournamentTest extends BaseTestCase
 
         $tournament = Tournament::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_fetch.json'), true)['tournament']
+            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_fetch.json'), true)['data']
         );
 
         $response = $tournament->bulkAddParticipant([
@@ -202,16 +204,17 @@ class TournamentTest extends BaseTestCase
 
     public function test_tournament_delete_participant(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/participant_fetch.json')));
+        $this->mockHandler->append(new Response(204, [])); // DELETE returns 204 No Content
 
         $tournament = Tournament::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_start.json'), true)['tournament']
+            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_start.json'), true)['data']
         );
 
-        $response = $tournament->deleteParticipant(1);
+        $tournament->deleteParticipant(1);
 
-        $this->assertEquals('Team 1', $response->display_name);
+        // Assert that delete completed without exception
+        $this->assertTrue(true);
     }
 
     public function test_tournament_update_participant(): void
@@ -220,7 +223,7 @@ class TournamentTest extends BaseTestCase
 
         $tournament = Tournament::fromResponse(
             $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_start.json'), true)['tournament']
+            json_decode(file_get_contents(__DIR__ . '/stubs/tournament_start.json'), true)['data']
         );
 
         $response = $tournament->updateParticipant(1);

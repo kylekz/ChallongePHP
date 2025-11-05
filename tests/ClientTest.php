@@ -38,7 +38,7 @@ class ClientTest extends TestCase
         $challonge = new Challonge($httplug, 'asdf');
         $httplugResponse = $challonge->createTournament();
         $this->assertSame(
-            json_decode($mockResponse->getBody())->tournament->name,
+            json_decode($mockResponse->getBody())->data->attributes->name,
             $httplugResponse->name,
         );
 
@@ -53,7 +53,7 @@ class ClientTest extends TestCase
         $challonge = new Challonge($guzzle, 'asdf');
         $guzzleResponse = $challonge->createTournament();
         $this->assertSame(
-            json_decode($mockResponse->getBody())->tournament->name,
+            json_decode($mockResponse->getBody())->data->attributes->name,
             $guzzleResponse->name,
         );
 
