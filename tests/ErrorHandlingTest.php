@@ -130,7 +130,7 @@ class ErrorHandlingTest extends TestCase
 
     public function testThrowsValidationExceptionOn422(): void
     {
-        $errorJson = file_get_contents(__DIR__ . '/Fixtures/ErrorResponse.json');
+        $errorJson = file_get_contents(__DIR__ . '/Fixtures/Error.json');
 
         $client = $this->createMockClient(422, $errorJson);
         $challonge = $this->createChallonge($client);

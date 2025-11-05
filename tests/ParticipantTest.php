@@ -1,60 +1,95 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests;
 
-use Nyholm\Psr7\Response;
+use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Client\ClientInterface;
+use Reflex\Challonge\Auth\ApiKeyAuth;
+use Reflex\Challonge\Challonge;
 use Reflex\Challonge\DTO\Participant;
 
-class ParticipantTest extends BaseTestCase
+/**
+ * Participant operations tests using modern PSR-18 pattern
+ */
+class ParticipantTest extends TestCase
 {
+    private function createMockClient(string $fixtureFile): ClientInterface
+    {
+        $json = file_get_contents(__DIR__ . '/Fixtures/' . $fixtureFile);
+
+        $mock = $this->createMock(ClientInterface::class);
+        $mock->method('sendRequest')
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], $json));
+
+        return $mock;
+    }
+
+    private function createChallonge(ClientInterface $client): Challonge
+    {
+        $auth = new ApiKeyAuth('test_api_key');
+        return new Challonge($client, $auth);
+    }
+
     public function test_participant_index(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/participant_index.json')));
+        $client = $this->createMockClient('ParticipantCollection.json');
+        $challonge = $this->createChallonge($client);
 
-        $response = $this->challonge->getParticipants('challongephptest');
+        $response = $challonge->getParticipants('challongephptest');
 
         $this->assertCount(3, $response);
     }
 
     public function test_tournament_fetch(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/participant_fetch.json')));
+        $client = $this->createMockClient('Participant.json');
+        $challonge = $this->createChallonge($client);
 
-        $response = $this->challonge->getParticipant('challongephptest', 132810231);
+        $response = $challonge->getParticipant('challongephptest', 12345);
 
-        $this->assertEquals('Team 1', $response->display_name);
+        $this->assertEquals('Player 1', $response->display_name);
     }
 
     public function test_participant_randomize(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/participant_index.json')));
+        $client = $this->createMockClient('ParticipantCollection.json');
+        $challonge = $this->createChallonge($client);
 
-        $response = $this->challonge->randomizeParticipants('challongephptest');
+        $response = $challonge->randomizeParticipants('challongephptest');
 
         $this->assertCount(3, $response);
     }
 
     public function test_participant_update(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/participant_fetch.json')));
+        $client = $this->createMockClient('Participant.json');
+        $challonge = $this->createChallonge($client);
 
         $participant = Participant::fromResponse(
-            $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/participant_fetch.json'), true)['data']
+            $challonge->getClient(),
+            json_decode(file_get_contents(__DIR__ . '/Fixtures/Participant.json'), true)['data']
         );
 
         $response = $participant->update();
 
-        $this->assertEquals('Team 1', $response->display_name);
+        $this->assertEquals('Player 1', $response->display_name);
     }
 
     public function test_participant_delete(): void
     {
-        $this->mockHandler->append(new Response(204, [])); // DELETE returns 204 No Content
+        // Mock DELETE response (204 No Content)
+        $mock = $this->createMock(ClientInterface::class);
+        $mock->method('sendRequest')
+            ->willReturn(new Response(204, []));
+
+        $challonge = new Challonge($mock, new ApiKeyAuth('test_api_key'));
 
         $participant = Participant::fromResponse(
-            $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/participant_fetch.json'), true)['data']
+            $challonge->getClient(),
+            json_decode(file_get_contents(__DIR__ . '/Fixtures/Participant.json'), true)['data']
         );
 
         $participant->delete();
@@ -65,29 +100,31 @@ class ParticipantTest extends BaseTestCase
 
     public function test_participant_checkin(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/participant_fetch.json')));
+        $client = $this->createMockClient('Participant.json');
+        $challonge = $this->createChallonge($client);
 
         $participant = Participant::fromResponse(
-            $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/participant_fetch.json'), true)['data']
+            $challonge->getClient(),
+            json_decode(file_get_contents(__DIR__ . '/Fixtures/Participant.json'), true)['data']
         );
 
         $response = $participant->checkin();
 
-        $this->assertEquals('Team 1', $response->display_name);
+        $this->assertEquals('Player 1', $response->display_name);
     }
 
     public function test_participant_undo_checkin(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/participant_fetch.json')));
+        $client = $this->createMockClient('Participant.json');
+        $challonge = $this->createChallonge($client);
 
         $participant = Participant::fromResponse(
-            $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/participant_fetch.json'), true)['data']
+            $challonge->getClient(),
+            json_decode(file_get_contents(__DIR__ . '/Fixtures/Participant.json'), true)['data']
         );
 
         $response = $participant->undoCheckin();
 
-        $this->assertEquals('Team 1', $response->display_name);
+        $this->assertEquals('Player 1', $response->display_name);
     }
 }

@@ -45,7 +45,7 @@ class EntityTest extends TestCase
 
     public function testFetchTournament(): void
     {
-        $client = $this->createMockClient('TournamentResponse.json');
+        $client = $this->createMockClient('Tournament.json');
         $challonge = $this->createChallonge($client);
 
         $tournament = $challonge->fetchTournament('example_tournament');
@@ -65,7 +65,7 @@ class EntityTest extends TestCase
 
     public function testTournamentHasReadonlyProperties(): void
     {
-        $client = $this->createMockClient('TournamentResponse.json');
+        $client = $this->createMockClient('Tournament.json');
         $challonge = $this->createChallonge($client);
         $tournament = $challonge->fetchTournament('example_tournament');
 
@@ -77,7 +77,7 @@ class EntityTest extends TestCase
 
     public function testFetchParticipant(): void
     {
-        $client = $this->createMockClient('ParticipantResponse.json');
+        $client = $this->createMockClient('Participant.json');
         $challonge = $this->createChallonge($client);
 
         $participant = $challonge->getParticipant('example_tournament', 12345);
@@ -99,7 +99,7 @@ class EntityTest extends TestCase
 
     public function testFetchMatch(): void
     {
-        $client = $this->createMockClient('MatchResponse.json');
+        $client = $this->createMockClient('Match.json');
         $challonge = $this->createChallonge($client);
 
         $match = $challonge->getMatch('example_tournament', 98765);
@@ -121,7 +121,7 @@ class EntityTest extends TestCase
 
     public function testFetchAttachment(): void
     {
-        $client = $this->createMockClient('AttachmentResponse.json');
+        $client = $this->createMockClient('Attachment.json');
         $challonge = $this->createChallonge($client);
 
         $attachment = $challonge->getMatchAttachment('example_tournament', 98765, 332211);
@@ -141,7 +141,7 @@ class EntityTest extends TestCase
 
     public function testFetchRace(): void
     {
-        $client = $this->createMockClient('RaceResponse.json');
+        $client = $this->createMockClient('Race.json');
         $challonge = $this->createChallonge($client);
 
         $race = $challonge->fetchRace('speedrun_championship');
@@ -164,7 +164,7 @@ class EntityTest extends TestCase
 
     public function testFetchRound(): void
     {
-        $client = $this->createMockClient('RoundResponse.json');
+        $client = $this->createMockClient('Round.json');
         $challonge = $this->createChallonge($client);
 
         $round = $challonge->getRaceRound('speedrun_championship', 60401);
@@ -184,7 +184,7 @@ class EntityTest extends TestCase
 
     public function testFetchElapsedTime(): void
     {
-        $client = $this->createMockClient('ElapsedTimeResponse.json');
+        $client = $this->createMockClient('ElapsedTime.json');
         $challonge = $this->createChallonge($client);
 
         $time = $challonge->getRoundElapsedTime('speedrun_championship', 60401, 70501);
@@ -206,7 +206,7 @@ class EntityTest extends TestCase
 
     public function testFetchCommunity(): void
     {
-        $client = $this->createMockClient('CommunityResponse.json');
+        $client = $this->createMockClient('Community.json');
         $challonge = $this->createChallonge($client);
 
         $community = $challonge->getCommunity('esports_champions');
@@ -229,7 +229,7 @@ class EntityTest extends TestCase
 
     public function testFetchUser(): void
     {
-        $client = $this->createMockClient('UserResponse.json');
+        $client = $this->createMockClient('User.json');
         $challonge = $this->createChallonge($client);
 
         $user = $challonge->getMe();
@@ -254,15 +254,15 @@ class EntityTest extends TestCase
     public function testAllEntitiesAreImmutable(): void
     {
         $entities = [
-            'TournamentResponse.json' => fn($c) => $c->fetchTournament('test'),
-            'ParticipantResponse.json' => fn($c) => $c->getParticipant('test', 1),
-            'MatchResponse.json' => fn($c) => $c->getMatch('test', 1),
-            'AttachmentResponse.json' => fn($c) => $c->getMatchAttachment('test', 1, 1),
-            'RaceResponse.json' => fn($c) => $c->fetchRace('test'),
-            'RoundResponse.json' => fn($c) => $c->getRaceRound('test', 1),
-            'ElapsedTimeResponse.json' => fn($c) => $c->getRoundElapsedTime('test', 1, 1),
-            'CommunityResponse.json' => fn($c) => $c->getCommunity('test'),
-            'UserResponse.json' => fn($c) => $c->getMe(),
+            'Tournament.json' => fn($c) => $c->fetchTournament('test'),
+            'Participant.json' => fn($c) => $c->getParticipant('test', 1),
+            'Match.json' => fn($c) => $c->getMatch('test', 1),
+            'Attachment.json' => fn($c) => $c->getMatchAttachment('test', 1, 1),
+            'Race.json' => fn($c) => $c->fetchRace('test'),
+            'Round.json' => fn($c) => $c->getRaceRound('test', 1),
+            'ElapsedTime.json' => fn($c) => $c->getRoundElapsedTime('test', 1, 1),
+            'Community.json' => fn($c) => $c->getCommunity('test'),
+            'User.json' => fn($c) => $c->getMe(),
         ];
 
         foreach ($entities as $fixture => $getter) {

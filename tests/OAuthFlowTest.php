@@ -398,7 +398,7 @@ class OAuthFlowTest extends TestCase
 
     public function testChallongeClientWithOAuthToken(): void
     {
-        $tournamentJson = file_get_contents(__DIR__ . '/Fixtures/TournamentResponse.json');
+        $tournamentJson = file_get_contents(__DIR__ . '/Fixtures/Tournament.json');
 
         $httpClient = $this->createMock(ClientInterface::class);
         $httpClient->expects($this->once())

@@ -1,83 +1,115 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests;
 
-use Nyholm\Psr7\Response;
+use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Client\ClientInterface;
+use Reflex\Challonge\Auth\ApiKeyAuth;
+use Reflex\Challonge\Challonge;
 use Reflex\Challonge\DTO\MatchDto;
 
-class MatchTest extends BaseTestCase
+/**
+ * Match operations tests using modern PSR-18 pattern
+ */
+class MatchTest extends TestCase
 {
+    private function createMockClient(string $fixtureFile): ClientInterface
+    {
+        $json = file_get_contents(__DIR__ . '/Fixtures/' . $fixtureFile);
+
+        $mock = $this->createMock(ClientInterface::class);
+        $mock->method('sendRequest')
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], $json));
+
+        return $mock;
+    }
+
+    private function createChallonge(ClientInterface $client): Challonge
+    {
+        $auth = new ApiKeyAuth('test_api_key');
+        return new Challonge($client, $auth);
+    }
+
     public function test_match_index(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/match_index.json')));
+        $client = $this->createMockClient('MatchCollection.json');
+        $challonge = $this->createChallonge($client);
 
-        $response = $this->challonge->getMatches('challongephptest');
+        $response = $challonge->getMatches('challongephptest');
 
         $this->assertCount(2, $response);
     }
 
     public function test_match_fetch(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/match_fetch.json')));
+        $client = $this->createMockClient('Match.json');
+        $challonge = $this->createChallonge($client);
 
-        $response = $this->challonge->getMatch('challongephptest', 217044207);
+        $response = $challonge->getMatch('challongephptest', 98765);
 
-        $this->assertEquals(217044207, $response->id);
+        $this->assertEquals(98765, $response->id);
     }
 
     public function test_match_update(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/match_fetch.json')));
+        $client = $this->createMockClient('Match.json');
+        $challonge = $this->createChallonge($client);
 
         $match = MatchDto::fromResponse(
-            $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/match_fetch.json'), true)['data']
+            $challonge->getClient(),
+            json_decode(file_get_contents(__DIR__ . '/Fixtures/Match.json'), true)['data']
         );
 
         $response = $match->update();
 
-        $this->assertEquals(217044207, $response->id);
+        $this->assertEquals(98765, $response->id);
     }
 
     public function test_match_reopen(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/match_fetch.json')));
+        $client = $this->createMockClient('Match.json');
+        $challonge = $this->createChallonge($client);
 
         $match = MatchDto::fromResponse(
-            $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/match_fetch.json'), true)['data']
+            $challonge->getClient(),
+            json_decode(file_get_contents(__DIR__ . '/Fixtures/Match.json'), true)['data']
         );
 
         $response = $match->reopen();
 
-        $this->assertEquals(217044207, $response->id);
+        $this->assertEquals(98765, $response->id);
     }
 
     public function test_match_mark_underway(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/match_fetch.json')));
+        $client = $this->createMockClient('Match.json');
+        $challonge = $this->createChallonge($client);
 
         $match = MatchDto::fromResponse(
-            $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/match_fetch.json'), true)['data']
+            $challonge->getClient(),
+            json_decode(file_get_contents(__DIR__ . '/Fixtures/Match.json'), true)['data']
         );
 
         $response = $match->markAsUnderway();
 
-        $this->assertEquals(217044207, $response->id);
+        $this->assertEquals(98765, $response->id);
     }
 
     public function test_match_unmark_underway(): void
     {
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/stubs/match_fetch.json')));
+        $client = $this->createMockClient('Match.json');
+        $challonge = $this->createChallonge($client);
 
         $match = MatchDto::fromResponse(
-            $this->challonge->getClient(),
-            json_decode(file_get_contents(__DIR__ . '/stubs/match_fetch.json'), true)['data']
+            $challonge->getClient(),
+            json_decode(file_get_contents(__DIR__ . '/Fixtures/Match.json'), true)['data']
         );
 
         $response = $match->unmarkAsUnderway();
 
-        $this->assertEquals(217044207, $response->id);
+        $this->assertEquals(98765, $response->id);
     }
 }

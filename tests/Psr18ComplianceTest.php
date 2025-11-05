@@ -37,7 +37,7 @@ class Psr18ComplianceTest extends TestCase
      */
     public function testSendsPsr7Request(): void
     {
-        $json = file_get_contents(__DIR__ . '/Fixtures/TournamentResponse.json');
+        $json = file_get_contents(__DIR__ . '/Fixtures/Tournament.json');
 
         $client = $this->createMock(ClientInterface::class);
         $client->expects($this->once())
@@ -59,7 +59,7 @@ class Psr18ComplianceTest extends TestCase
      */
     public function testIncludesProperHeaders(): void
     {
-        $json = file_get_contents(__DIR__ . '/Fixtures/TournamentResponse.json');
+        $json = file_get_contents(__DIR__ . '/Fixtures/Tournament.json');
 
         $client = $this->createMock(ClientInterface::class);
         $client->expects($this->once())
@@ -94,7 +94,7 @@ class Psr18ComplianceTest extends TestCase
      */
     public function testUsesCorrectHttpMethods(): void
     {
-        $json = file_get_contents(__DIR__ . '/Fixtures/TournamentResponse.json');
+        $json = file_get_contents(__DIR__ . '/Fixtures/Tournament.json');
 
         // Test GET request
         $client = $this->createMock(ClientInterface::class);
@@ -116,7 +116,7 @@ class Psr18ComplianceTest extends TestCase
      */
     public function testPostRequestsIncludeBody(): void
     {
-        $json = file_get_contents(__DIR__ . '/Fixtures/TournamentResponse.json');
+        $json = file_get_contents(__DIR__ . '/Fixtures/Tournament.json');
 
         $client = $this->createMock(ClientInterface::class);
         $client->expects($this->once())
@@ -150,7 +150,7 @@ class Psr18ComplianceTest extends TestCase
      */
     public function testPutRequestsWorkForUpdates(): void
     {
-        $json = file_get_contents(__DIR__ . '/Fixtures/TournamentResponse.json');
+        $json = file_get_contents(__DIR__ . '/Fixtures/Tournament.json');
 
         $client = $this->createMock(ClientInterface::class);
         $client->expects($this->exactly(2))
@@ -179,7 +179,7 @@ class Psr18ComplianceTest extends TestCase
      */
     public function testDeleteRequestsWork(): void
     {
-        $getTournamentJson = file_get_contents(__DIR__ . '/Fixtures/TournamentResponse.json');
+        $getTournamentJson = file_get_contents(__DIR__ . '/Fixtures/Tournament.json');
 
         $client = $this->createMock(ClientInterface::class);
         $client->expects($this->exactly(2))
@@ -209,7 +209,7 @@ class Psr18ComplianceTest extends TestCase
      */
     public function testHandlesPsr7Response(): void
     {
-        $json = file_get_contents(__DIR__ . '/Fixtures/TournamentResponse.json');
+        $json = file_get_contents(__DIR__ . '/Fixtures/Tournament.json');
 
         $client = $this->createMock(ClientInterface::class);
         $client->method('sendRequest')
@@ -229,7 +229,7 @@ class Psr18ComplianceTest extends TestCase
      */
     public function testHandlesErrorResponses(): void
     {
-        $errorJson = file_get_contents(__DIR__ . '/Fixtures/ErrorResponse.json');
+        $errorJson = file_get_contents(__DIR__ . '/Fixtures/Error.json');
 
         $client = $this->createMock(ClientInterface::class);
         $client->method('sendRequest')
@@ -275,7 +275,7 @@ class Psr18ComplianceTest extends TestCase
      */
     public function testApiKeyAuthHeaderFormat(): void
     {
-        $json = file_get_contents(__DIR__ . '/Fixtures/TournamentResponse.json');
+        $json = file_get_contents(__DIR__ . '/Fixtures/Tournament.json');
 
         $client = $this->createMock(ClientInterface::class);
         $client->expects($this->once())
