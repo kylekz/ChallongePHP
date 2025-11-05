@@ -150,8 +150,18 @@ class Tournament
      */
     public function start(): self
     {
-        if ($this->state === 'underway' || $this->state === 'in_progress') {
-            throw new AlreadyStartedException('Tournament is already underway.');
+        // Check if tournament has already started (any in-progress or complete state)
+        $hasStarted = match ($this->state) {
+            TournamentState::GROUP_STAGES_UNDERWAY,
+            TournamentState::GROUP_STAGES_FINALIZED,
+            TournamentState::UNDERWAY,
+            TournamentState::AWAITING_REVIEW,
+            TournamentState::COMPLETE => true,
+            default => false,
+        };
+
+        if ($hasStarted) {
+            throw new AlreadyStartedException('Tournament has already started.');
         }
 
         $response = $this->client->request('POST', "tournaments/{$this->id}/change_state", [
@@ -285,8 +295,18 @@ class Tournament
      */
     public function processCheckins(): self
     {
-        if ($this->state === TournamentState::UNDERWAY) {
-            throw new AlreadyStartedException('Tournament is already underway.');
+        // Check if tournament has started (any in-progress or complete state)
+        $hasStarted = match ($this->state) {
+            TournamentState::GROUP_STAGES_UNDERWAY,
+            TournamentState::GROUP_STAGES_FINALIZED,
+            TournamentState::UNDERWAY,
+            TournamentState::AWAITING_REVIEW,
+            TournamentState::COMPLETE => true,
+            default => false,
+        };
+
+        if ($hasStarted) {
+            throw new AlreadyStartedException('Tournament has already started.');
         }
 
         $response = $this->client->request('POST', "tournaments/{$this->id}/process_check_ins");
@@ -306,8 +326,18 @@ class Tournament
      */
     public function abortCheckins(): self
     {
-        if ($this->state === TournamentState::UNDERWAY) {
-            throw new AlreadyStartedException('Tournament is already underway.');
+        // Check if tournament has started (any in-progress or complete state)
+        $hasStarted = match ($this->state) {
+            TournamentState::GROUP_STAGES_UNDERWAY,
+            TournamentState::GROUP_STAGES_FINALIZED,
+            TournamentState::UNDERWAY,
+            TournamentState::AWAITING_REVIEW,
+            TournamentState::COMPLETE => true,
+            default => false,
+        };
+
+        if ($hasStarted) {
+            throw new AlreadyStartedException('Tournament has already started.');
         }
 
         $response = $this->client->request('POST', "tournaments/{$this->id}/abort_check_in");
