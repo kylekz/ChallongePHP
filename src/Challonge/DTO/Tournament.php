@@ -12,28 +12,78 @@ use Reflex\Challonge\Exceptions\StillRunningException;
 /**
  * Tournament DTO
  *
- * Note: All properties are nullable because Challonge's API is not stable
- * and frequently adds/changes fields. The v2.1 API uses JSON API format.
+ * Properties are typed based on Challonge API v2.1 swagger specification.
+ * Core fields and fields with default values are non-nullable.
+ * Optional fields that may not be present in responses are nullable.
  */
 class Tournament
 {
     use DtoClientTrait;
 
     public function __construct(
-        // Core identifiers
-        public readonly ?int $id = null,
-        public readonly ?string $name = null,
-        public readonly ?string $url = null,
+        // Core identifiers - always present
+        public readonly int $id,
+        public readonly string $name,
+        public readonly string $tournament_type,
+        public readonly string $state,
 
-        // Tournament configuration
-        public readonly ?string $tournament_type = null,
-        public readonly ?string $state = null,
+        // Timestamps - always present
+        public readonly string $created_at,
+        public readonly string $updated_at,
+
+        // Core counts - have defaults
+        public readonly int $participants_count = 0,
+        public readonly int $progress_meter = 0,
+
+        // Boolean settings - have defaults
+        public readonly bool $private = false,
+        public readonly bool $open_signup = false,
+        public readonly bool $notify_users_when_matches_open = true,
+        public readonly bool $notify_users_when_the_tournament_ends = true,
+        public readonly bool $require_score_agreement = false,
+        public readonly bool $accept_attachments = false,
+        public readonly bool $hide_forum = false,
+        public readonly bool $show_rounds = true,
+        public readonly bool $sequential_pairings = false,
+        public readonly bool $quick_advance = false,
+        public readonly bool $hold_third_place_match = false,
+        public readonly bool $hide_seeds = false,
+        public readonly bool $participants_locked = false,
+        public readonly bool $allow_participant_match_reporting = true,
+        public readonly bool $split_participants = false,
+        public readonly bool $group_stages_enabled = false,
+        public readonly bool $created_by_api = false,
+        public readonly bool $credit_capped = false,
+        public readonly bool $review_before_finalizing = true,
+        public readonly bool $accepting_predictions = false,
+        public readonly bool $public_predictions_before_start_time = false,
+        public readonly bool $group_stages_were_started = false,
+        public readonly bool $participants_swappable = false,
+        public readonly bool $team_convertable = false,
+
+        // Integers with defaults
+        public readonly int $swiss_rounds = 0,
+        public readonly int $rr_iterations = 1,
+        public readonly int $prediction_method = 0,
+        public readonly int $max_predictions_per_user = 1,
+
+        // Strings with defaults
+        public readonly string $ranked_by = '',
+        public readonly string $registration_type = 'free',
+
+        // Optional strings
+        public readonly ?string $url = null,
         public readonly ?string $description = null,
         public readonly ?string $description_source = null,
+        public readonly ?string $game_name = null,
+        public readonly ?string $subdomain = null,
+        public readonly ?string $full_challonge_url = null,
+        public readonly ?string $live_image_url = null,
+        public readonly ?string $sign_up_url = null,
+        public readonly ?string $grand_finals_modifier = null,
+        public readonly ?string $registration_fee = null,
 
-        // Dates
-        public readonly ?string $created_at = null,
-        public readonly ?string $updated_at = null,
+        // Optional timestamps
         public readonly ?string $start_at = null,
         public readonly ?string $started_at = null,
         public readonly ?string $completed_at = null,
@@ -41,113 +91,48 @@ class Tournament
         public readonly ?string $locked_at = null,
         public readonly ?string $predictions_opened_at = null,
 
-        // Tournament settings
-        public readonly ?bool $open_signup = null,
-        public readonly ?bool $private = null,
-        public readonly ?bool $notify_users_when_matches_open = null,
-        public readonly ?bool $notify_users_when_the_tournament_ends = null,
-        public readonly ?bool $require_score_agreement = null,
-        public readonly ?bool $accept_attachments = null,
-        public readonly ?bool $hide_forum = null,
-        public readonly ?bool $show_rounds = null,
-        public readonly ?bool $sequential_pairings = null,
-
-        // Bracket/Match settings
-        public readonly ?bool $quick_advance = null,
-        public readonly ?bool $hold_third_place_match = null,
-        public readonly ?bool $hide_seeds = null,
-        public readonly ?string $ranked_by = null,
-        public readonly ?string $grand_finals_modifier = null,
-
-        // Points/Scoring
-        public readonly ?string $pts_for_game_win = null,
-        public readonly ?string $pts_for_game_tie = null,
-        public readonly ?string $pts_for_match_win = null,
-        public readonly ?string $pts_for_match_tie = null,
-        public readonly ?string $pts_for_bye = null,
-        public readonly ?string $rr_pts_for_game_win = null,
-        public readonly ?string $rr_pts_for_game_tie = null,
-        public readonly ?string $rr_pts_for_match_win = null,
-        public readonly ?string $rr_pts_for_match_tie = null,
-
-        // Swiss/Round Robin
-        public readonly ?int $swiss_rounds = null,
-        public readonly ?int $rr_iterations = null,
-
-        // Participants
-        public readonly ?int $participants_count = null,
+        // Optional integers
         public readonly ?int $signup_cap = null,
-        public readonly ?bool $participants_locked = null,
-        public readonly ?bool $participants_swappable = null,
-        public readonly ?bool $allow_participant_match_reporting = null,
-        public readonly ?bool $split_participants = null,
+        public readonly ?int $category = null,
+        public readonly ?int $game_id = null,
+        public readonly ?int $event_id = null,
+        public readonly ?int $program_id = null,
+        public readonly ?int $tournament_registration_id = null,
+
+        // Optional booleans
         public readonly ?bool $show_participant_country = null,
-
-        // Teams
-        public readonly mixed $teams = null,
-        public readonly ?bool $team_convertable = null,
-        public readonly ?string $team_size_range = null,
-
-        // Check-in
-        public readonly mixed $check_in_duration = null,
-
-        // Progress/Status
-        public readonly ?int $progress_meter = null,
-        public readonly ?bool $review_before_finalizing = null,
-
-        // Predictions
-        public readonly ?int $prediction_method = null,
+        public readonly ?bool $donation_contest_enabled = null,
+        public readonly ?bool $mandatory_donation = null,
+        public readonly ?bool $auto_assign_stations = null,
+        public readonly ?bool $only_start_matches_with_stations = null,
         public readonly ?bool $anonymous_voting = null,
-        public readonly ?int $max_predictions_per_user = null,
-        public readonly ?bool $accepting_predictions = null,
-        public readonly ?bool $public_predictions_before_start_time = null,
-        public readonly mixed $predict_the_losers_bracket = null,
+        public readonly ?bool $use_new_style = null,
 
-        // Group stages
-        public readonly ?bool $group_stages_enabled = null,
-        public readonly ?bool $group_stages_were_started = null,
+        // Points/Scoring - strings with defaults
+        public readonly string $pts_for_game_win = '0.0',
+        public readonly string $pts_for_game_tie = '0.0',
+        public readonly string $pts_for_match_win = '1.0',
+        public readonly string $pts_for_match_tie = '0.5',
+        public readonly string $pts_for_bye = '1.0',
+        public readonly string $rr_pts_for_game_win = '0.0',
+        public readonly string $rr_pts_for_game_tie = '0.0',
+        public readonly string $rr_pts_for_match_win = '1.0',
+        public readonly string $rr_pts_for_match_tie = '0.5',
 
-        // API/Meta
-        public readonly ?bool $created_by_api = null,
-        public readonly ?bool $credit_capped = null,
+        // Mixed/array types
+        public readonly mixed $teams = null,
+        public readonly mixed $check_in_duration = null,
         public readonly mixed $tie_breaks = null,
         public readonly mixed $ranked = null,
         public readonly mixed $spam = null,
         public readonly mixed $ham = null,
         public readonly mixed $toxic = null,
-        public readonly ?bool $use_new_style = null,
-
-        // Registration
-        public readonly ?string $registration_fee = null,
-        public readonly ?string $registration_type = null,
-        public readonly ?int $tournament_registration_id = null,
-        public readonly ?bool $donation_contest_enabled = null,
-        public readonly ?bool $mandatory_donation = null,
-
-        // Stations
-        public readonly ?bool $auto_assign_stations = null,
-        public readonly ?bool $only_start_matches_with_stations = null,
-
-        // Categories/Games
-        public readonly ?int $category = null,
-        public readonly ?int $game_id = null,
-        public readonly ?string $game_name = null,
-        public readonly ?int $event_id = null,
-        public readonly ?int $program_id = null,
+        public readonly mixed $predict_the_losers_bracket = null,
         public readonly mixed $program_classification_ids_allowed = null,
         public readonly mixed $non_elimination_tournament_data = null,
-
-        // URLs
-        public readonly ?string $subdomain = null,
-        public readonly ?string $full_challonge_url = null,
-        public readonly ?string $live_image_url = null,
-        public readonly ?string $sign_up_url = null,
-
-        // Regions
+        public readonly ?string $team_size_range = null,
         public readonly ?array $allowed_regions = null,
-
-        // Display
-        public readonly ?array $optional_display_data = null,
+        public readonly array $optional_display_data = [],
     ) {
     }
 

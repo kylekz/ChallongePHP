@@ -9,67 +9,78 @@ use Reflex\Challonge\DtoClientTrait;
 /**
  * Match DTO
  *
- * Note: All properties are nullable because Challonge's API is not stable
- * and frequently adds/changes fields. The v2.1 API uses JSON API format.
+ * Properties are typed based on Challonge API v2.1 swagger specification.
  */
 class MatchDto
 {
     use DtoClientTrait;
 
     public function __construct(
-        // Core identifiers
-        public readonly ?int $id = null,
-        public readonly ?int $tournament_id = null,
-        public readonly ?string $identifier = null,
+        // Core identifiers - always present
+        public readonly int $id,
+        public readonly int $tournament_id,
+        public readonly string $identifier,
 
-        // State
-        public readonly ?string $state = null,
+        // State - always present
+        public readonly string $state,
+
+        // Round/ordering - have defaults
+        public readonly int $round = 1,
+        public readonly int $suggested_play_order = 1,
+
+        // Timestamps - always present
+        public readonly string $created_at,
+        public readonly string $updated_at,
+
+        // Boolean flags - have defaults
+        public readonly bool $optional = false,
+        public readonly bool $player1_is_prereq_match_loser = false,
+        public readonly bool $player2_is_prereq_match_loser = false,
+        public readonly bool $has_attachment = false,
+
+        // Optional boolean (can be null)
         public readonly ?bool $forfeited = null,
-        public readonly ?bool $optional = null,
 
-        // Players
+        // Optional counts (can be null)
+        public readonly ?int $attachment_count = null,
+
+        // Scores - empty string default
+        public readonly string $scores_csv = '',
+        public readonly string $prerequisite_match_ids_csv = '',
+
+        // Optional player IDs (can be null before seeding)
         public readonly ?int $player1_id = null,
-        public readonly ?bool $player1_is_prereq_match_loser = null,
-        public readonly ?int $player1_prereq_match_id = null,
-        public readonly ?int $player1_votes = null,
         public readonly ?int $player2_id = null,
-        public readonly ?bool $player2_is_prereq_match_loser = null,
+
+        // Optional prerequisite matches
+        public readonly ?int $player1_prereq_match_id = null,
         public readonly ?int $player2_prereq_match_id = null,
+
+        // Optional votes
+        public readonly ?int $player1_votes = null,
         public readonly ?int $player2_votes = null,
 
-        // Results
+        // Optional results (only set when match complete)
         public readonly ?int $winner_id = null,
         public readonly ?int $loser_id = null,
-        public readonly ?string $scores_csv = null,
 
-        // Scheduling
-        public readonly ?int $round = null,
-        public readonly mixed $suggested_play_order = null,
+        // Optional scheduling
         public readonly ?string $scheduled_time = null,
         public readonly ?string $location = null,
 
-        // Timestamps
-        public readonly ?string $created_at = null,
-        public readonly ?string $updated_at = null,
+        // Optional timestamps
         public readonly ?string $completed_at = null,
         public readonly ?string $started_at = null,
         public readonly ?string $underway_at = null,
 
-        // Attachments
-        public readonly ?bool $has_attachment = null,
-        public readonly ?int $attachment_count = null,
-
-        // Group/Tournament context
+        // Optional group/tournament context
         public readonly ?int $group_id = null,
-        public readonly ?string $prerequisite_match_ids_csv = null,
+        public readonly ?int $rushb_id = null,
 
-        // Images
+        // Optional open graph images
         public readonly ?string $open_graph_image_file_name = null,
         public readonly ?string $open_graph_image_content_type = null,
         public readonly ?string $open_graph_image_file_size = null,
-
-        // Integration
-        public readonly ?int $rushb_id = null,
     ) {
     }
 

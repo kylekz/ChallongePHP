@@ -9,71 +9,71 @@ use Reflex\Challonge\DtoClientTrait;
 /**
  * Participant DTO
  *
- * Note: All properties are nullable because Challonge's API is not stable
- * and frequently adds/changes fields. The v2.1 API uses JSON API format.
+ * Properties are typed based on Challonge API v2.1 swagger specification.
+ * Required: name
  */
 class Participant
 {
     use DtoClientTrait;
 
     public function __construct(
-        // Core identifiers
-        public readonly ?int $id = null,
-        public readonly ?int $tournament_id = null,
+        // Core identifiers - always present
+        public readonly int $id,
+        public readonly int $tournament_id,
 
-        // Basic info
-        public readonly ?string $name = null,
-        public readonly ?string $display_name = null,
-        public readonly ?string $display_name_with_invitation_email_address = null,
+        // Required fields
+        public readonly string $name,
+        public readonly string $display_name,
+
+        // Seeding - has default
+        public readonly int $seed = 1,
+
+        // Boolean status fields - have defaults
+        public readonly bool $active = true,
+        public readonly bool $on_waiting_list = false,
+        public readonly bool $removable = true,
+        public readonly bool $reactivatable = false,
+        public readonly bool $confirm_remove = false,
+        public readonly bool $participatable_or_invitation_attached = false,
+        public readonly bool $invitation_pending = false,
+        public readonly bool $check_in_open = false,
+        public readonly bool $can_check_in = false,
+        public readonly bool $checked_in = false,
+        public readonly bool $has_irrelevant_seed = false,
+
+        // Timestamps - always present
+        public readonly string $created_at,
+        public readonly string $updated_at,
+
+        // Arrays - have defaults
+        public readonly array $group_player_ids = [],
+
+        // Optional display
+        public readonly string $display_name_with_invitation_email_address = '',
+
+        // Optional strings
         public readonly ?string $username = null,
         public readonly ?string $challonge_username = null,
-
-        // Email
         public readonly ?string $invite_email = null,
         public readonly ?string $challonge_email_address_verified = null,
         public readonly ?string $email_hash = null,
-
-        // Status
-        public readonly ?bool $active = null,
-        public readonly ?bool $on_waiting_list = null,
-        public readonly ?bool $removable = null,
-        public readonly ?bool $reactivatable = null,
-        public readonly ?bool $confirm_remove = null,
-        public readonly ?bool $participatable_or_invitation_attached = null,
-        public readonly ?bool $invitation_pending = null,
-
-        // Check-in
-        public readonly ?bool $check_in_open = null,
-        public readonly ?bool $can_check_in = null,
-        public readonly ?bool $checked_in = null,
-        public readonly ?string $checked_in_at = null,
-
-        // Seeding and ranking
-        public readonly ?int $seed = null,
-        public readonly ?int $final_rank = null,
-        public readonly ?bool $has_irrelevant_seed = null,
-        public readonly mixed $clinch = null,
-
-        // Group/Team
-        public readonly ?int $group_id = null,
-        public readonly ?array $group_player_ids = null,
-
-        // Integration
-        public readonly ?array $integration_uids = null,
-        public readonly ?int $invitation_id = null,
-        public readonly mixed $ranked_member_id = null,
-
-        // Media
+        public readonly ?string $misc = null,
         public readonly ?string $icon = null,
         public readonly ?string $attached_participatable_portrait_url = null,
 
-        // Custom fields
-        public readonly mixed $custom_field_response = null,
-        public readonly ?string $misc = null,
+        // Optional integers
+        public readonly ?int $group_id = null,
+        public readonly ?int $final_rank = null,
+        public readonly ?int $invitation_id = null,
 
-        // Timestamps
-        public readonly ?string $created_at = null,
-        public readonly ?string $updated_at = null,
+        // Optional timestamp
+        public readonly ?string $checked_in_at = null,
+
+        // Mixed types
+        public readonly mixed $clinch = null,
+        public readonly mixed $ranked_member_id = null,
+        public readonly mixed $custom_field_response = null,
+        public readonly ?array $integration_uids = null,
     ) {
     }
 

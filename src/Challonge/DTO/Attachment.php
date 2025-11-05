@@ -10,27 +10,30 @@ use Reflex\Challonge\DtoClientTrait;
  * Match Attachment DTO
  *
  * Represents a file or image attachment associated with a match.
+ * Required fields: url, description (per swagger)
  */
 class Attachment
 {
     use DtoClientTrait;
 
     public function __construct(
-        // Core identifiers
-        public readonly ?int $id = null,
+        // Core identifiers - always present
+        public readonly int $id,
+
+        // Required fields
+        public readonly string $url,
+        public readonly string $description,
+
+        // Timestamps - always present
+        public readonly string $created_at,
+        public readonly string $updated_at,
+
+        // Optional IDs
         public readonly ?int $match_id = null,
         public readonly ?int $user_id = null,
 
-        // Attachment info
-        public readonly ?string $description = null,
-        public readonly ?string $url = null,
+        // Optional file info
         public readonly ?string $original_file_name = null,
-
-        // Timestamps
-        public readonly ?string $created_at = null,
-        public readonly ?string $updated_at = null,
-
-        // Asset details
         public readonly ?string $asset_file_name = null,
         public readonly ?string $asset_content_type = null,
         public readonly ?int $asset_file_size = null,
