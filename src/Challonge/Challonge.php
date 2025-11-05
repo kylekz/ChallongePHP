@@ -8,9 +8,15 @@ use Illuminate\Support\Collection;
 use Psr\Http\Client\ClientInterface;
 use Reflex\Challonge\Auth\ApiKeyAuth;
 use Reflex\Challonge\Auth\AuthenticationInterface;
+use Reflex\Challonge\DTO\Attachment;
+use Reflex\Challonge\DTO\Community;
+use Reflex\Challonge\DTO\ElapsedTime;
 use Reflex\Challonge\DTO\MatchDto;
 use Reflex\Challonge\DTO\Participant;
+use Reflex\Challonge\DTO\Race;
+use Reflex\Challonge\DTO\Round;
 use Reflex\Challonge\DTO\Tournament;
+use Reflex\Challonge\DTO\User;
 
 /**
  * Challonge API v2.1 Client
@@ -385,5 +391,259 @@ class Challonge
             ['type' => 'winner', 'id' => $match->winner_id, 'score' => $scores[1]],
             ['type' => 'player', 'id' => $playerId, 'score' => $playerScore],
         ]);
+    }
+
+    // ==================== RACE METHODS ====================
+
+    /**
+     * Get all races
+     *
+     * @param array<string, mixed> $filters
+     * @return Collection<int, Race>
+     * @throws Exceptions\InvalidFormatException
+     * @throws Exceptions\NotFoundException
+     * @throws Exceptions\ServerException
+     * @throws Exceptions\UnauthorizedException
+     * @throws Exceptions\ValidationException
+     */
+    public function getRaces(array $filters = []): Collection
+    {
+        $response = $this->client->request('GET', 'races', [], $filters);
+        $data = $response['data'] ?? $response;
+
+        return Collection::make($data)
+            ->map(fn (array $race) => Race::fromResponse($this->client, $race));
+    }
+
+    /**
+     * Create a new race
+     *
+     * @param array<string, mixed> $attributes
+     * @return Race
+     * @throws Exceptions\InvalidFormatException
+     * @throws Exceptions\NotFoundException
+     * @throws Exceptions\ServerException
+     * @throws Exceptions\UnauthorizedException
+     * @throws Exceptions\ValidationException
+     */
+    public function createRace(array $attributes = []): Race
+    {
+        $response = $this->client->request('POST', 'races', [
+            'data' => [
+                'type' => 'races',
+                'attributes' => $attributes,
+            ],
+        ]);
+
+        return Race::fromResponse($this->client, $response['data'] ?? $response);
+    }
+
+    /**
+     * Fetch a specific race
+     *
+     * @param string $race Race ID or URL
+     * @return Race
+     * @throws Exceptions\InvalidFormatException
+     * @throws Exceptions\NotFoundException
+     * @throws Exceptions\ServerException
+     * @throws Exceptions\UnauthorizedException
+     * @throws Exceptions\ValidationException
+     */
+    public function fetchRace(string $race): Race
+    {
+        $response = $this->client->request('GET', "races/{$race}");
+
+        return Race::fromResponse($this->client, $response['data'] ?? $response);
+    }
+
+    /**
+     * Get rounds for a race
+     *
+     * @param string $race Race ID or URL
+     * @return Collection<int, Round>
+     * @throws Exceptions\InvalidFormatException
+     * @throws Exceptions\NotFoundException
+     * @throws Exceptions\ServerException
+     * @throws Exceptions\UnauthorizedException
+     * @throws Exceptions\ValidationException
+     */
+    public function getRaceRounds(string $race): Collection
+    {
+        $response = $this->client->request('GET', "races/{$race}/rounds");
+        $data = $response['data'] ?? $response;
+
+        return Collection::make($data)
+            ->map(fn (array $round) => Round::fromResponse($this->client, $round));
+    }
+
+    /**
+     * Get a specific round
+     *
+     * @param string $race Race ID or URL
+     * @param int $round Round ID
+     * @return Round
+     * @throws Exceptions\InvalidFormatException
+     * @throws Exceptions\NotFoundException
+     * @throws Exceptions\ServerException
+     * @throws Exceptions\UnauthorizedException
+     * @throws Exceptions\ValidationException
+     */
+    public function getRaceRound(string $race, int $round): Round
+    {
+        $response = $this->client->request('GET', "races/{$race}/rounds/{$round}");
+
+        return Round::fromResponse($this->client, $response['data'] ?? $response);
+    }
+
+    /**
+     * Get elapsed times for a round
+     *
+     * @param string $race Race ID or URL
+     * @param int $round Round ID
+     * @return Collection<int, ElapsedTime>
+     * @throws Exceptions\InvalidFormatException
+     * @throws Exceptions\NotFoundException
+     * @throws Exceptions\ServerException
+     * @throws Exceptions\UnauthorizedException
+     * @throws Exceptions\ValidationException
+     */
+    public function getRoundElapsedTimes(string $race, int $round): Collection
+    {
+        $response = $this->client->request('GET', "races/{$race}/rounds/{$round}/elapsed_times");
+        $data = $response['data'] ?? $response;
+
+        return Collection::make($data)
+            ->map(fn (array $time) => ElapsedTime::fromResponse($this->client, $time));
+    }
+
+    /**
+     * Get a specific elapsed time
+     *
+     * @param string $race Race ID or URL
+     * @param int $round Round ID
+     * @param int $elapsedTime Elapsed time ID
+     * @return ElapsedTime
+     * @throws Exceptions\InvalidFormatException
+     * @throws Exceptions\NotFoundException
+     * @throws Exceptions\ServerException
+     * @throws Exceptions\UnauthorizedException
+     * @throws Exceptions\ValidationException
+     */
+    public function getRoundElapsedTime(string $race, int $round, int $elapsedTime): ElapsedTime
+    {
+        $response = $this->client->request('GET', "races/{$race}/rounds/{$round}/elapsed_times/{$elapsedTime}");
+
+        return ElapsedTime::fromResponse($this->client, $response['data'] ?? $response);
+    }
+
+    // ==================== ATTACHMENT METHODS ====================
+
+    /**
+     * Get attachments for a match
+     *
+     * @param string $tournament Tournament ID or URL
+     * @param int $match Match ID
+     * @return Collection<int, Attachment>
+     * @throws Exceptions\InvalidFormatException
+     * @throws Exceptions\NotFoundException
+     * @throws Exceptions\ServerException
+     * @throws Exceptions\UnauthorizedException
+     * @throws Exceptions\ValidationException
+     */
+    public function getMatchAttachments(string $tournament, int $match): Collection
+    {
+        $response = $this->client->request('GET', "tournaments/{$tournament}/matches/{$match}/attachments");
+        $data = $response['data'] ?? $response;
+
+        return Collection::make($data)
+            ->map(fn (array $attachment) => Attachment::fromResponse($this->client, $attachment));
+    }
+
+    /**
+     * Get a specific match attachment
+     *
+     * @param string $tournament Tournament ID or URL
+     * @param int $match Match ID
+     * @param int $attachment Attachment ID
+     * @return Attachment
+     * @throws Exceptions\InvalidFormatException
+     * @throws Exceptions\NotFoundException
+     * @throws Exceptions\ServerException
+     * @throws Exceptions\UnauthorizedException
+     * @throws Exceptions\ValidationException
+     */
+    public function getMatchAttachment(string $tournament, int $match, int $attachment): Attachment
+    {
+        $response = $this->client->request('GET', "tournaments/{$tournament}/matches/{$match}/attachments/{$attachment}");
+
+        return Attachment::fromResponse($this->client, $response['data'] ?? $response);
+    }
+
+    /**
+     * Create a match attachment
+     *
+     * @param string $tournament Tournament ID or URL
+     * @param int $match Match ID
+     * @param array<string, mixed> $attributes Attachment attributes (url or file data)
+     * @return Attachment
+     * @throws Exceptions\InvalidFormatException
+     * @throws Exceptions\NotFoundException
+     * @throws Exceptions\ServerException
+     * @throws Exceptions\UnauthorizedException
+     * @throws Exceptions\ValidationException
+     */
+    public function createMatchAttachment(string $tournament, int $match, array $attributes = []): Attachment
+    {
+        $response = $this->client->request('POST', "tournaments/{$tournament}/matches/{$match}/attachments", [
+            'data' => [
+                'type' => 'attachments',
+                'attributes' => $attributes,
+            ],
+        ]);
+
+        return Attachment::fromResponse($this->client, $response['data'] ?? $response);
+    }
+
+    // ==================== COMMUNITY METHODS ====================
+
+    /**
+     * Get a community by identifier
+     *
+     * Note: The Community DTO itself has methods for getting tournaments, participants, etc.
+     *
+     * @param string $identifier Community identifier/URL
+     * @return Community
+     * @throws Exceptions\InvalidFormatException
+     * @throws Exceptions\NotFoundException
+     * @throws Exceptions\ServerException
+     * @throws Exceptions\UnauthorizedException
+     * @throws Exceptions\ValidationException
+     */
+    public function getCommunity(string $identifier): Community
+    {
+        $response = $this->client->request('GET', "communities/{$identifier}");
+
+        return Community::fromResponse($this->client, $response['data'] ?? $response);
+    }
+
+    // ==================== USER METHODS ====================
+
+    /**
+     * Get the authenticated user's profile
+     *
+     * Requires OAuth authentication with 'me' scope or API key
+     *
+     * @return User
+     * @throws Exceptions\InvalidFormatException
+     * @throws Exceptions\NotFoundException
+     * @throws Exceptions\ServerException
+     * @throws Exceptions\UnauthorizedException
+     * @throws Exceptions\ValidationException
+     */
+    public function getMe(): User
+    {
+        $response = $this->client->request('GET', 'me');
+
+        return User::fromResponse($this->client, $response['data'] ?? $response);
     }
 }
