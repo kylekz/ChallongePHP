@@ -265,11 +265,11 @@ class Challonge
         $groups = [];
 
         foreach ($participants as $team) {
-            $teamWithResults = $this->getStanding($team, $matches);
-            $finals[] = $teamWithResults->final['results'];
+            $standing = $this->getStanding($team, $matches);
+            $finals[] = $standing->final['results'];
 
-            if (!empty($teamWithResults->groups[0])) {
-                $groups[] = $teamWithResults->groups[0]['results'];
+            if (!empty($standing->groups[0])) {
+                $groups[] = $standing->groups[0]['results'];
             }
         }
 
@@ -287,7 +287,7 @@ class Challonge
     /**
      * Get standing for a participant across all groups and matches
      */
-    private function getStanding(Participant $participant, Collection $matches): Participant
+    private function getStanding(Participant $participant, Collection $matches): DTO\ParticipantStanding
     {
         $participantGroups = [];
 
@@ -316,11 +316,11 @@ class Challonge
             $participant->name ?? ''
         );
 
-        // Note: These are dynamic properties for standings calculation
-        $participant->groups = $participantGroups;
-        $participant->final = $participantFinal;
-
-        return $participant;
+        return new DTO\ParticipantStanding(
+            participant: $participant,
+            groups: $participantGroups,
+            final: $participantFinal,
+        );
     }
 
     /**
