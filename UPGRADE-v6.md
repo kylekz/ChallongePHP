@@ -238,9 +238,38 @@ echo $tournament->id;   // Still works the same
 // $tournament->name = 'New Name'; // ❌ Error
 ```
 
+## New Entities
+
+v6.0 includes full implementation of all Challonge API v2.1 entities:
+
+### Previously Available:
+- **Tournament** - Standard tournament management
+- **Participant** - Tournament participants
+- **Match** - Match management and score reporting
+
+### New in v6.0:
+- **Race** - Time-trial/racing tournaments with timing
+- **Round** - Race rounds with elapsed time tracking
+- **ElapsedTime** - Participant time records for races
+- **Attachment** - Match attachments (images, files, URLs)
+- **Community** - Community management and scoped tournaments
+- **User** - Authenticated user profile information
+
+All entities are fully implemented with complete CRUD operations where applicable.
+
 ## New Features
 
-### 1. Modern Type Hints
+### 1. Complete API Coverage
+
+v6.0 implements 100% of the Challonge API v2.1 swagger specification:
+- All 9 entity types
+- All endpoints from swagger.json
+- Community-scoped tournament operations
+- Race/time-trial tournament support
+- Match attachment management
+- User profile access
+
+### 2. Modern Type Hints
 
 All classes now use PHP 8.1+ features:
 

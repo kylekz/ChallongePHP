@@ -188,6 +188,88 @@ foreach ($standings['final'] as $standing) {
 }
 ```
 
+### Races (Time-Trial Tournaments)
+
+```php
+// Create a race
+$race = $challonge->createRace([
+    'name' => 'Speed Run Championship',
+    'race_type' => 'time_trial',
+    'target_round_count' => 3,
+]);
+
+// Start the race
+$race = $race->changeState('start');
+
+// Create a round
+$round = $race->createRound(['number' => 1]);
+
+// Record elapsed times
+$time = $round->createElapsedTime([
+    'participant_id' => 123,
+    'elapsed_time_millis' => 125430,
+]);
+
+// Bulk update times
+$times = $round->bulkUpdateElapsedTimes([
+    ['participant_id' => 123, 'elapsed_time_millis' => 125430],
+    ['participant_id' => 456, 'elapsed_time_millis' => 128920],
+]);
+```
+
+### Communities
+
+```php
+// Get a community
+$community = $challonge->getCommunity('my-community');
+
+// List community tournaments
+$tournaments = $community->getTournaments(['state' => 'in_progress']);
+
+// Create a tournament in the community
+$tournament = $community->createTournament([
+    'name' => 'Community Championship',
+    'tournament_type' => 'double_elimination',
+]);
+
+// Get participants
+$participants = $community->getTournamentParticipants($tournament->id);
+
+// Get matches
+$matches = $community->getTournamentMatches($tournament->id);
+```
+
+### Attachments
+
+```php
+// Add an attachment to a match
+$attachment = $challonge->createMatchAttachment('my_tournament', 12345, [
+    'url' => 'https://example.com/match-screenshot.png',
+    'description' => 'Final game screenshot',
+]);
+
+// Get all match attachments
+$attachments = $challonge->getMatchAttachments('my_tournament', 12345);
+
+// Update an attachment
+$attachment = $attachment->update([
+    'description' => 'Updated description',
+]);
+
+// Delete an attachment
+$attachment->delete();
+```
+
+### User Profile
+
+```php
+// Get the authenticated user's profile
+$user = $challonge->getMe();
+
+echo "Welcome, {$user->display_name}!";
+echo "You've organized {$user->tournaments_count} tournaments";
+```
+
 ## OAuth Flows
 
 ### 1. Authorization Code Flow (Web Applications)
