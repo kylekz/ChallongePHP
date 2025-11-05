@@ -34,8 +34,8 @@ composer require team-reflex/challonge-php:^6.0
 | ChallongePHP | PHP Version | Challonge API | Status |
 |--------------|-------------|---------------|---------|
 | ^6.0 | 8.1 - 8.4 | v2.1 | ✅ Active |
-| ^5.0 | 8.1 - 8.2 | v1 | ⚠️ Security Only |
-| ^4.0 | 8.0 - 8.1 | v1 | ⚠️ Security Only |
+| ^5.0 | 8.1 - 8.2 | v1 | ❌ Deprecated |
+| ^4.0 | 8.0 - 8.1 | v1 | ❌ Deprecated |
 | ^3.0 | 7.4 - 8.0 | v1 | ❌ Deprecated |
 
 ## Quick Start
@@ -324,6 +324,8 @@ $token = $flow->getAccessToken();
 
 ```php
 OAuthConfig::SCOPE_ME                      // Read user details
+OAuthConfig::SCOPE_APPLICATION_ORGANIZER   // Full access to user's resources
+OAuthConfig::SCOPE_APPLICATION_PLAYER      // Read resources, register, report scores
 OAuthConfig::SCOPE_TOURNAMENTS_READ        // Read tournaments
 OAuthConfig::SCOPE_TOURNAMENTS_WRITE       // Create, update, delete tournaments
 OAuthConfig::SCOPE_MATCHES_READ            // Read matches
@@ -446,19 +448,4 @@ Contributions are welcome! Please:
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
-
-## Credits
-
-- **Kyle Ward** - Original author
-- **Contributors** - See [GitHub contributors](https://github.com/teamreflex/ChallongePHP/graphs/contributors)
-
-## Support
-
-- **Issues**: [GitHub Issues](https://github.com/teamreflex/ChallongePHP/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/teamreflex/ChallongePHP/discussions)
-- **Email**: support@team-reflex.com
-
----
-
-Built with ❤️ by [Team Reflex](https://team-reflex.com)
+MIT License. See [LICENSE.md](https://github.com/teamreflex/ChallongePHP/blob/master/LICENSE.md) for details.

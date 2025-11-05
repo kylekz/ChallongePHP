@@ -278,7 +278,7 @@ All classes now use PHP 8.1+ features:
 - Named arguments
 - Constructor property promotion
 
-### 2. OAuth Scopes
+### 3. OAuth Scopes
 
 Available OAuth scopes:
 
@@ -297,7 +297,7 @@ OAuthConfig::SCOPE_PARTICIPANTS_WRITE      // Create, update, delete participant
 OAuthConfig::SCOPE_COMMUNITIES_MANAGE      // Manage communities
 ```
 
-### 3. Token Management
+### 4. Token Management
 
 ```php
 use Reflex\Challonge\Auth\OAuth\AccessToken;
@@ -363,8 +363,7 @@ $tournament = $tournament->update(['name' => 'New Name']);
 
 ## Need Help?
 
-- Check the [examples directory](examples/) for working code samples
-- Review the [API documentation](https://api.challonge.com/docs/v2.1)
+- Review the [README.md](README.md) for code examples
 - Open an [issue on GitHub](https://github.com/teamreflex/ChallongePHP/issues)
 
 ## Rollback
@@ -375,4 +374,4 @@ If you need to rollback to v5:
 composer require team-reflex/challonge-php:^5.0
 ```
 
-Note that v5 will only receive security updates going forward.
+Note that v5 is now deprecated and will not receive further updates.
